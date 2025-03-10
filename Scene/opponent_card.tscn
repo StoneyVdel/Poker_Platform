@@ -1,0 +1,37 @@
+[gd_scene load_steps=3 format=3 uid="uid://cm5ho7dthlci4"]
+
+[ext_resource type="Texture2D" uid="uid://dhsg705aydu76" path="res://Assets/Card_Back.png" id="1_m8yje"]
+
+[sub_resource type="GDScript" id="GDScript_fc131"]
+script/source = "extends Node2D
+
+const CARD_WIDTH = 124*1.36
+var center_screen_x
+var screen_size
+var deck_ref
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	deck_ref = $\"../Deck\"
+	center_screen_x = get_viewport().size.x / 2
+	screen_size = get_viewport().size
+	
+	
+func update_hand_positions(card, index):
+	var new_position = Vector2(clamp($\"../PlayerHand\".calculate_card_position(index), 0, screen_size.x) , 
+		clamp( 130, 0, screen_size.y ))
+	deck_ref.animate_card_to_position(card, new_position)
+	pass
+	
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+"
+
+[node name="OpponentHand" type="Node2D"]
+position = Vector2(1699, 509)
+script = SubResource("GDScript_fc131")
+
+[node name="OpponentHandSprite" type="Sprite2D" parent="."]
+scale = Vector2(2, 2)
+texture = ExtResource("1_m8yje")

@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://blp6y0maep8qs"]
+
+[ext_resource type="PackedScene" uid="uid://bb2oaw8sjkx3c" path="res://Scene/action_label.tscn" id="1_13hia"]
+
+[node name="Action" type="Node2D"]
+position = Vector2(793, 45)
+
+[node name="ActionLabel" parent="." instance=ExtResource("1_13hia")]

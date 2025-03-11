@@ -1,10 +1,8 @@
 extends Node2D
 
-const HAND_COUNT = 2
 var card_db_ref
 var deck_full = []
 var deck_shuffled = []
-var OutlinePos =[]
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -24,25 +22,16 @@ func shuffle_deck():
 	print(deck_shuffled)
 	
 func draw_card(card_count):
-	#Limit the amount of cards drawn
-	#var card_scene = preload(CARD_SCENE)
+
 	var card_drawn_name = []
 	
 	for i in range(card_count):
-		#var new_card = card_scene.instantiate()
 		if deck_shuffled.size() != 0:
 			card_drawn_name.insert(i, deck_shuffled[0])
 			deck_shuffled.erase(card_drawn_name[i])
-
-			if deck_shuffled.size() == 0:
-				$Area2D/CollisionShape2D.disabled = true
-				$DeckSprite.visible = true
+				
 	return card_drawn_name
 	
 func animate_card_to_position(card, new_position):
 	var tween = get_tree().create_tween()
 	tween.tween_property(card, "position", new_position, 0.65)
-	
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass

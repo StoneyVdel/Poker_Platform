@@ -1,46 +1,21 @@
-[gd_scene load_steps=9 format=3 uid="uid://d3gicsog4y7bk"]
+[gd_scene load_steps=8 format=3 uid="uid://d3gicsog4y7bk"]
 
-[ext_resource type="Script" path="res://Scripts/player_hand.gd" id="1_7cwc5"]
+[ext_resource type="Script" path="res://Scripts/player.gd" id="1_7cwc5"]
 [ext_resource type="Texture2D" uid="uid://dyry83ssgis5g" path="res://Assets/Table.jpg" id="1_brlkv"]
+[ext_resource type="Script" path="res://Scripts/table.gd" id="1_csfaw"]
 [ext_resource type="PackedScene" uid="uid://cdc2q67c85bbb" path="res://Scene/deck.tscn" id="2_fw3xl"]
-[ext_resource type="Script" path="res://Scripts/input_manager.gd" id="4_qo128"]
 [ext_resource type="PackedScene" uid="uid://ut61nrnralnv" path="res://Scene/outline.tscn" id="5_s1l8t"]
-[ext_resource type="Script" path="res://Scripts/game_logic.gd" id="7_17kbb"]
+[ext_resource type="Script" path="res://Scripts/game_manager.gd" id="7_l2gyp"]
 [ext_resource type="Script" path="res://Scripts/opponent_hand.gd" id="8_jete1"]
-
-[sub_resource type="GDScript" id="GDScript_8ct1v"]
-script/source = "extends Node2D
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-	"
 
 [node name="Main" type="Node2D"]
 
 [node name="Table" type="Node2D" parent="."]
+script = ExtResource("1_csfaw")
 
 [node name="Background" type="Sprite2D" parent="Table"]
 position = Vector2(960, 540)
 texture = ExtResource("1_brlkv")
-
-[node name="Deck" parent="." instance=ExtResource("2_fw3xl")]
-
-[node name="PlayerHand" type="Node2D" parent="."]
-script = ExtResource("1_7cwc5")
-
-[node name="OpponentHand" type="Node2D" parent="."]
-script = ExtResource("8_jete1")
-
-[node name="CardManager" type="Node2D" parent="."]
-script = SubResource("GDScript_8ct1v")
-
-[node name="InputManager" type="Node2D" parent="."]
-script = ExtResource("4_qo128")
 
 [node name="Outlines" type="Node2D" parent="."]
 
@@ -59,5 +34,65 @@ position = Vector2(1110, 515)
 [node name="Outline5" parent="Outlines" instance=ExtResource("5_s1l8t")]
 position = Vector2(1292, 515)
 
-[node name="GameLogic" type="Node2D" parent="."]
-script = ExtResource("7_17kbb")
+[node name="StakeLabel" type="RichTextLabel" parent="."]
+offset_left = 1446.0
+offset_top = 789.0
+offset_right = 1526.0
+offset_bottom = 829.0
+scale = Vector2(4, 4)
+text = "0"
+
+[node name="TimerLabel" type="RichTextLabel" parent="."]
+offset_left = 1472.0
+offset_top = 827.0
+offset_right = 1712.0
+offset_bottom = 947.0
+
+[node name="TimeoutTimer" type="Timer" parent="."]
+
+[node name="ActionTimer" type="Timer" parent="."]
+
+[node name="Deck" parent="." instance=ExtResource("2_fw3xl")]
+
+[node name="Player" type="Node2D" parent="."]
+script = ExtResource("1_7cwc5")
+
+[node name="OpponentHand" type="Node2D" parent="."]
+script = ExtResource("8_jete1")
+
+[node name="Call" type="Button" parent="."]
+offset_left = 72.0
+offset_top = 743.0
+offset_right = 152.0
+offset_bottom = 783.0
+scale = Vector2(3, 3)
+disabled = true
+text = "Call"
+
+[node name="Fold" type="Button" parent="."]
+offset_left = 72.0
+offset_top = 899.0
+offset_right = 152.0
+offset_bottom = 939.0
+scale = Vector2(3, 3)
+disabled = true
+text = "Fold
+"
+
+[node name="Raise" type="Button" parent="."]
+offset_left = 375.0
+offset_top = 743.0
+offset_right = 455.0
+offset_bottom = 783.0
+scale = Vector2(3, 3)
+disabled = true
+text = "Raise"
+
+[node name="GameManager" type="Node" parent="."]
+script = ExtResource("7_l2gyp")
+
+[node name="TempTimer" type="Timer" parent="."]
+
+[connection signal="pressed" from="Call" to="GameManager" method="_on_call_pressed"]
+[connection signal="pressed" from="Fold" to="GameManager" method="_on_fold_pressed"]
+[connection signal="pressed" from="Raise" to="GameManager" method="_on_raise_pressed"]

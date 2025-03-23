@@ -1,0 +1,87 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Martynas\\Documents\\poker\\demo\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{869E58DE-7B05-4143-9D0C-360EE2AFFEBD}|Poker.csproj|c:\\users\\martynas\\documents\\poker\\demo\\scripts\\room.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{869E58DE-7B05-4143-9D0C-360EE2AFFEBD}|Poker.csproj|solutionrelative:scripts\\room.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{869E58DE-7B05-4143-9D0C-360EE2AFFEBD}|Poker.csproj|c:\\users\\martynas\\documents\\poker\\demo\\scripts\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{869E58DE-7B05-4143-9D0C-360EE2AFFEBD}|Poker.csproj|solutionrelative:scripts\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{869E58DE-7B05-4143-9D0C-360EE2AFFEBD}|Poker.csproj|c:\\users\\martynas\\documents\\poker\\demo\\scripts\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{869E58DE-7B05-4143-9D0C-360EE2AFFEBD}|Poker.csproj|solutionrelative:scripts\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:3:0:{57d563b6-44a5-47df-85be-f4199ad6b651}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:5:0:{57d563b6-44a5-47df-85be-f4199ad6b651}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Room.cs",
+              "DocumentMoniker": "C:\\Users\\Martynas\\Documents\\poker\\demo\\Scripts\\Room.cs",
+              "RelativeDocumentMoniker": "Scripts\\Room.cs",
+              "ToolTip": "C:\\Users\\Martynas\\Documents\\poker\\demo\\Scripts\\Room.cs*",
+              "RelativeToolTip": "Scripts\\Room.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-21T17:11:04.888Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Martynas\\Documents\\poker\\demo\\Scripts\\Program.cs",
+              "RelativeDocumentMoniker": "Scripts\\Program.cs",
+              "ToolTip": "C:\\Users\\Martynas\\Documents\\poker\\demo\\Scripts\\Program.cs*",
+              "RelativeToolTip": "Scripts\\Program.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-21T17:11:04.004Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ApplicationUser.cs",
+              "DocumentMoniker": "C:\\Users\\Martynas\\Documents\\poker\\demo\\Scripts\\ApplicationUser.cs",
+              "RelativeDocumentMoniker": "Scripts\\ApplicationUser.cs",
+              "ToolTip": "C:\\Users\\Martynas\\Documents\\poker\\demo\\Scripts\\ApplicationUser.cs",
+              "RelativeToolTip": "Scripts\\ApplicationUser.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-21T17:10:59.013Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

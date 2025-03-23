@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://cdc2q67c85bbb"]
+
+[ext_resource type="Script" uid="uid://fvey14c8nsa7" path="res://Scripts/deck.gd" id="1_f6jeu"]
+[ext_resource type="Texture2D" uid="uid://d3rwng43bjxqy" path="res://Assets/Card_Deck_Red.png" id="2_5dwcv"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jvfs1"]
+size = Vector2(249, 212)
+
+[node name="Deck" type="Node2D"]
+position = Vector2(1699, 509)
+script = ExtResource("1_f6jeu")
+
+[node name="DeckSprite" type="Sprite2D" parent="."]
+scale = Vector2(2, 2)
+texture = ExtResource("2_5dwcv")
+region_enabled = true
+region_rect = Rect2(0, 0, 124.368, 104.68)
+
+[node name="DeckArea" type="Area2D" parent="."]
+
+[node name="DeckCollision" type="CollisionShape2D" parent="DeckArea"]
+shape = SubResource("RectangleShape2D_jvfs1")

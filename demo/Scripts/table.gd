@@ -3,7 +3,6 @@ extends Node2D
 const game_stage = ["pre", "flop", "turn", "river", "showdown"]
 const ACTION_SCENE =  "res://Scene/action_label.tscn"
 
-var actions = ["Call", "Fold", "Raise"]
 var players_all = ["Player", "Opp"]
 var players = []
 #players_data = { User: [stake, card_names, #[card_values]] }
@@ -12,9 +11,8 @@ var players_data = {}
 var players_state = {}
 var table_cards= []
 var timeout_timer
-var big_blind
-var small_blind
-var player_count = 2
+var big_blind #TB
+var small_blind #TB
 var dealer
 var game_manager_ref
 var deck_ref
@@ -34,7 +32,7 @@ var player_rank
 var opp_rank
 var player_rank_name
 var opp_rank_name
-	
+
 func _ready() -> void:
 	deck_ref = $"../Deck"
 	game_manager_ref = $"../GameManager"
@@ -118,7 +116,7 @@ func table_bet(raise, user, action):
 				player_ref.current_raise = last_bet
 	players_state[user][1] = false
 
-	$TableBet.text = str(table_bets)
+	player_ref.table_bet_label_set_text(table_bets)
 	
 func format_data():
 	reform_table_cards= deck_ref.reformat_cards(table_cards, "Table")

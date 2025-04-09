@@ -6,6 +6,7 @@ const OPPONENT_CARD_SCENE = "res://Scene/opponent_card.tscn"
 const CARD_WIDTH = 124*1.36
 var center_screen_x
 var screen_size
+
 var deck_ref
 var table_ref
 var game_manager_ref
@@ -15,6 +16,7 @@ var timeout_timer
 var current_raise
 var player_cards
 var bet
+var table_bet_label
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -25,6 +27,7 @@ func _ready() -> void:
 	game_manager_ref = $"../GameManager"
 	stake_label = $"../StakeLabel"
 	raise_label = $"../RaiseLabel"
+	table_bet_label = $TableBet
 	current_raise = table_ref.increase_amount
 	raise_label.text = str(current_raise)
 	timeout_timer = $"../TimeoutTimer"
@@ -37,7 +40,7 @@ func init():
 	draw_card_image(player_cards, $".")
 	$"../OpponentHand".opponent_card_draw(2)
 	#Showing the betting coins of the player
-	stake_label.text = str(bet)
+	stake_label_set_text(bet)
 		
 func draw_card_image(hand, node):
 	var card_scene = preload(CARD_SCENE)
@@ -63,6 +66,15 @@ func update_hand_positions(card, index):
 func calculate_card_position(index):
 	var x_offset = center_screen_x + (CARD_WIDTH * index) - CARD_WIDTH / 2
 	return x_offset
+	
+func stake_label_set_text(text):
+	stake_label.text = str(text)
+
+func table_bet_label_set_text(text):
+	table_bet_label.text = str(text)
+
+func raise_label_set_text(text):
+	raise_label.text = str(text)
 
 func call_func():
 	timeout_timer.stop()
@@ -70,7 +82,7 @@ func call_func():
 		table_ref.table_bet(table_ref.last_bet, game_manager_ref.current_user, "Call")
 		bet = table_ref.get_bets("Player")
 		raise_checking()
-		stake_label.text = str(bet)
+		stake_label_text(bet)
 	end_move()
 	
 func end_move():
@@ -124,7 +136,7 @@ func _on_raise_pressed() -> void:
 	table_ref.reset_user_state()
 	raise_checking()
 	#DRY
-	stake_label.text = str(bet)
+	stake_label_set_text(bet)
 	end_move()
 
 func _on_subtract_pressed() -> void:

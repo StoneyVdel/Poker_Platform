@@ -1,8 +1,6 @@
 extends Node
 
 const CARD_SCENE = "res://Scene/card.tscn"
-#const OPPONENT_CARD_SCENE = "res://Scene/opponent_card.tscn"
-#const ACTION_SCENE =  "res://Scene/action_label.tscn"
 
 var current_user
 var deck_ref
@@ -89,14 +87,16 @@ func rotation():
 			table_ref.format_data()
 			if table_ref.player_rank > table_ref.opp_rank:
 				print("You win !")
-				table_ref.players_data["Player"][0] = table_ref.table_bets
+				table_ref.players_data["Player"].insert(0, table_ref.get_bets("Player")+table_ref.table_bets)
+				player_ref.stake_label_set_text(table_ref.get_bets("Player"))
 				table_ref.table_bets = 0
-				#$TableBet.text = str(table_ref.table_bets)
+				player_ref.table_bet_label.text = str(table_ref.table_bets)
 			else :
 				print("You lose !")
-				table_ref.players_data["Opp"].insert(0, table_ref.table_bets)
+				table_ref.players_data["Opp"].insert(0, table_ref.players_data["Opp"][0]+table_ref.table_bets)
+				
 				table_ref.table_bets = 0
-				#$TableBet.text = str(table_ref.table_bets)
+				player_ref.table_bet_label.text = str(table_ref.table_bets)
 			pass
 		
 	else : 

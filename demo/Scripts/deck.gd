@@ -4,11 +4,15 @@ var card_db_ref
 var deck_full = {}
 var deck_shuffled = []
 var table_ref
+var chairs_ref
+var chairs
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	card_db_ref = preload("res://Scripts/Card_Database.gd") 
 	table_ref = $"../Table"
+	chairs_ref = $"../Chairs"
+	chairs = chairs_ref.get_children()
 	create_deck()
 	shuffle_deck()
 
@@ -36,10 +40,6 @@ func reformat_cards(hand, user):
 		
 		if user == "Table":
 			table_ref.hand_node.AssignStringArray(reform_card)
-		elif user == "Player":
-			table_ref.hand_node.AddCardsToUser1(reform_card)
-		else:
-			table_ref.hand_node.AddCardsToUser2(reform_card)
 			
 	return reform_cards
 		
@@ -53,7 +53,3 @@ func draw_card(card_count):
 			deck_shuffled.erase(card_drawn_name[i])
 				
 	return card_drawn_name
-	
-func animate_card_to_position(card, new_position):
-	var tween = get_tree().create_tween()
-	tween.tween_property(card, "position", new_position, 0.65)

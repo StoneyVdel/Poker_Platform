@@ -16,13 +16,16 @@ public partial class Room : Node
 		public ApplicationUser Chair2 { get; set; }
 		public ApplicationUser Chair3 { get; set; }
 		public ApplicationUser Chair4 { get; set; }
-
+		public ApplicationUser Chair5 { get; set; }
+		public ApplicationUser Chair6 { get; set; }
+		
 		public int PotOfChair0 { get; set; }
 		public int PotOfChair1 { get; set; }
 		public int PotOfChair2 { get; set; }
 		public int PotOfChair3 { get; set; }
 		public int PotOfChair4 { get; set; }
-
+		public int PotOfChair5 { get; set; }
+		public int PotOfChair6 { get; set; }
 
 		/*
 		 * The problem to evaluate a sorted array and give it a "score" compatibles with change base problem and sum up result.
@@ -668,8 +671,7 @@ public partial class Room : Node
 					}
 				}
 			}
-
-			//Console.WriteLine(totalWinners);
+			
 			return sidePotList;
 		}
 }

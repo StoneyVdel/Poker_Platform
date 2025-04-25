@@ -1,104 +1,78 @@
 extends Node2D
 
-const CARD_SCENE = "res://Scene/card.tscn"
 const OPPONENT_CARD_SCENE = "res://Scene/opponent_card.tscn"
-
-const CARD_WIDTH = 124*1.36
-var center_screen_x
-var screen_size
 
 var deck_ref
 var table_ref
 var game_manager_ref
-var stake_label
-var raise_label
+var visuals_ref
+
 var timeout_timer
 var current_raise
 var player_cards
 var bet
-var table_bet_label
+var is_add_button_down = false
+var is_subtract_button_down = false
+var i = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	deck_ref = $"../Deck"
 	table_ref = $"../Table"
-	center_screen_x = get_viewport().size.x / 2
-	screen_size = get_viewport().size
 	game_manager_ref = $"../GameManager"
-	stake_label = $"../StakeLabel"
-	raise_label = $"../RaiseLabel"
-	table_bet_label = $TableBet
+	visuals_ref = $"../Visuals"
 	current_raise = table_ref.increase_amount
-	raise_label.text = str(current_raise)
 	timeout_timer = $"../TimeoutTimer"
 	timeout_timer.one_shot = true
 
 func init():
 	player_cards = table_ref.get_cards("Player")
 	bet = table_ref.get_bets("Player")
-	#Getting card images for the player cards
-	draw_card_image(player_cards, $".")
-	$"../OpponentHand".opponent_card_draw(2)
-	#Showing the betting coins of the player
-	stake_label_set_text(bet)
-		
-func draw_card_image(hand, node):
-	var card_scene = preload(CARD_SCENE)
-	for i in range(hand.size()):
-		var new_card = card_scene.instantiate()
-		var card_image_path = str("res://Assets/"+hand[i]+".png")
-		new_card.get_node("Card_Image").texture = load(card_image_path)
-		if node == $"../Player":
-			node.add_card_to_hand(new_card, i)
-		elif node == $"../Outlines":
-			node.add_child(new_card)
-			deck_ref.animate_card_to_position(new_card, game_manager_ref.OutlinePos[i])
-			
-func add_card_to_hand(card, index):
-		$"../Player".add_child(card)
-		update_hand_positions(card, index)
-		
-func update_hand_positions(card, index):
-	var new_position = Vector2(clamp(calculate_card_position(index), 0, screen_size.x) , 
-		clamp(screen_size.y - 130, 0, screen_size.y ))
-	deck_ref.animate_card_to_position(card, new_position)
-		
-func calculate_card_position(index):
-	var x_offset = center_screen_x + (CARD_WIDTH * index) - CARD_WIDTH / 2
-	return x_offset
 	
-func stake_label_set_text(text):
-	stake_label.text = str(text)
+	#Getting card images for the player cards
+	visuals_ref.draw_card_image(player_cards, $".")
+	
+	for user in table_ref.players:
+		if user != "Player":
+			$"../OpponentHand".opponent_card_draw(2, user)
 
-func table_bet_label_set_text(text):
-	table_bet_label.text = str(text)
-
-func raise_label_set_text(text):
-	raise_label.text = str(text)
+	visuals_ref.raise_label.text = str(current_raise)
+	visuals_ref.set_label(visuals_ref.coin_label)
+	#Showing the betting coins of the player
+	#stake_label_set_text(bet)
 
 func call_func():
 	timeout_timer.stop()
 	if table_ref.players_state[game_manager_ref.current_user][1] == true:
-		table_ref.table_bet(table_ref.last_bet, game_manager_ref.current_user, "Call")
 		bet = table_ref.get_bets("Player")
-		raise_checking()
-		stake_label_text(bet)
-	end_move()
+		if table_ref.last_bet > bet:
+			table_ref.table_bet(bet, game_manager_ref.current_user, "Call")
+		else :
+			table_ref.table_bet(table_ref.last_bet, game_manager_ref.current_user, "Call")
+		bet = table_ref.get_bets("Player")
+		raise_check()
+		visuals_ref.set_label(visuals_ref.coin_label)
+	end_move(game_manager_ref.current_user, "Call")
 	
-func end_move():
-	$"../Call".disabled = true
-	$"../Fold".disabled = true
-	$"../Raise".disabled = true
+func end_move(user, action):
+	$"../ActionControl/Call".disabled = true
+	$"../ActionControl/Fold".disabled = true
+	$"../ActionControl/Raise".disabled = true
 	
-	table_ref.players_state[game_manager_ref.current_user][0] = true
-		
-	var next_user_index = table_ref.players.find(game_manager_ref.current_user)+1
-	if next_user_index < table_ref.players.size():
-		game_manager_ref.current_user = table_ref.players[next_user_index]
-	else :
-		game_manager_ref.current_user = table_ref.players[0]
-		
+	table_ref.players_state[user][0] = true
+	visuals_ref.update_action_log(user+" "+action)
+	game_manager_ref.current_user = find_next_user(user)
+	
 	game_manager_ref.rotation()
+
+func find_next_user(user):
+	var next_user_index = table_ref.players.find(user)+1
+	var next_user
+	if next_user_index < table_ref.players.size():
+		next_user = table_ref.players[next_user_index]
+	else :
+		next_user = table_ref.players[0]
+	return next_user
 	
 func check_raise_values(add):
 	if add == true:
@@ -113,38 +87,69 @@ func check_raise_values(add):
 		elif current_raise > table_ref.increase_amount:
 			current_raise-= table_ref.increase_amount
 		
-	raise_label.text = str(current_raise)
+	visuals_ref.set_label(visuals_ref.raise_label, str(current_raise))
+	i=0
 
-func raise_checking():
+func raise_check():
 	if current_raise > bet:
 			while current_raise > bet:
 				current_raise-= table_ref.increase_amount
-			raise_label.text = str(current_raise)
+			visuals_ref.set_label(visuals_ref.raise_label, str(current_raise))
 	
+func _process(_delta):
+	if is_add_button_down:
+		if i == 80:
+			check_raise_values(true)
+		i+=1
+	if is_subtract_button_down:
+		if i == 80:
+			check_raise_values(false)
+		i+=1
+
 func _on_call_pressed() -> void:
 	call_func()
 
 func _on_fold_pressed() -> void:
-	end_move()
+	end_move(game_manager_ref.current_user, "Fold")
+	table_ref.players_state[table_ref.players.find("Player")][2] = true
+	get_tree().pause()
+	get_tree().change_scene_to_file("res://Scene/menu.tscn")
 	timeout_timer.stop()
-	game_manager_ref.game_lost()
 
 func _on_raise_pressed() -> void:
 	timeout_timer.stop()
 	table_ref.table_bet(current_raise, game_manager_ref.current_user, "Raise")
 	bet = table_ref.get_bets("Player")
 	table_ref.reset_user_state()
-	raise_checking()
+	raise_check()
 	#DRY
-	stake_label_set_text(bet)
-	end_move()
-
-func _on_subtract_pressed() -> void:
-	check_raise_values(false)
+	visuals_ref.set_label(visuals_ref.coin_label)
+	end_move(game_manager_ref.current_user,"Raise")
 
 func _on_add_pressed() -> void:
 	check_raise_values(true)
+	
+func _on_subtract_pressed() -> void:
+	check_raise_values(false)
 
 func _on_timeout_timer_timeout() -> void:
-	end_move()
+	end_move(game_manager_ref.current_user, "Fold")
 	_on_fold_pressed()
+
+
+func _on_add_button_down() -> void:
+	is_add_button_down=true
+
+
+func _on_add_button_up() -> void:
+	is_add_button_down=false
+	i=0
+
+
+func _on_subtract_button_down() -> void:
+	is_subtract_button_down=true
+
+
+func _on_subtract_button_up() -> void:
+	is_subtract_button_down=false
+	i=0

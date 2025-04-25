@@ -1,9 +1,0 @@
-[gd_scene format=3 uid="uid://bb2oaw8sjkx3c"]
-
-[node name="ActionLabel" type="RichTextLabel"]
-visible = false
-offset_right = 80.0
-offset_bottom = 40.0
-scale = Vector2(3, 3)
-text = "0000"
-scroll_active = false

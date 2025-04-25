@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 public partial class Program : Node
 {
@@ -14,95 +16,144 @@ public partial class Program : Node
 		 * 
 		 * NOTE: special values: 11 - Joker, 12 - Queen, 13 - King, 14 - Ace
 		 */
-		public double U1rank { get; set; }
-		public double U2rank { get; set; }
-		public string U1rankName { get; set; }
-		public string U2rankName { get; set; }
-		//public Room room = new Room()
+		public string[] WinnerNames { get; set; } 
+		public List<ApplicationUser> users = new List<ApplicationUser>();
 		static List<string[]> CardsFromGodot = new List<string[]>();
-		static List<string[]> CardsForUser1 = new List<string[]>();
-		static List<string[]> CardsForUser2 = new List<string[]>();
-
-		public void AddCardsToUser1(string[] arr)
-		{
-			CardsForUser1.Add(arr);
-			
-		}
-		public void AddCardsToUser2(string[] arr)
-		{
-			CardsForUser2.Add(arr);
-			
-		}
+		public List<int> UserBets { get; set; }
+		
 		public void AssignStringArray(string[] arr)
 		{
 			CardsFromGodot.Add(arr);
 		}
-		
+		public void GetDataFromJSON(string json)
+		{
+			UserBets = new List<int>();
+			JsonNode root = JsonNode.Parse(json);
+			foreach (var kvp in root.AsObject())
+			{
+				string key = kvp.Key;
+				JsonArray data = kvp.Value.AsArray();
+				
+				int chips = data[0].GetValue<int>();
+				int bets = data[1].GetValue<int>();
+				UserBets.Add(bets);
+				JsonArray cards = data[2].AsArray();
+				JsonArray values = data[3].AsArray();
+				
+				List<string[]> card_values = new List<string[]>();
+				
+				//GD.Print("Values:");
+				foreach (JsonArray pair in values)
+				{
+					string number = pair[0].ToString();
+					string suit = pair[1].ToString();
+					string[] card_value = new string [] { number, suit };
+					card_values.Add(card_value);
+				}
+				ApplicationUser user = new ApplicationUser
+				{
+					Name = key,
+					PlayerCards = card_values,
+					Chips = chips
+				};
+				//GD.Print(user);
+				users.Add(user);
+			}
+			foreach (int i in UserBets)
+			{
+				GD.Print(i);
+			}
+		}
 		public void TestProgram()
 		{
+			List<string> WinnersList = new List<string>();
+			GD.Print("Table cards:");
 			foreach (string[] o in CardsFromGodot)
 			{
 				GD.Print(o);
 			}
+			GD.Print(" Table cards END \n");
 			Room room = new Room
 			{
 				RoomName = "Test Room",
 				CardsOnTable = new List<string[]>(CardsFromGodot)
 			};
-			ApplicationUser user1 = new ApplicationUser
+			switch(users.Count()) 
 			{
-				Name = "A",
-				PlayerCards = new List<string[]> (CardsForUser1),
-				Chips = 0
-			};
-			ApplicationUser user2 = new ApplicationUser
-			{
-				Name = "B",
-				PlayerCards = new List<string[]> (CardsForUser2),
-				Chips = 0
-			};
-			ApplicationUser user3 = new ApplicationUser
-			{
-				Name = "C",
-				PlayerCards = new List<string[]>
-				{
-					new string[]{"14", "Diamond"},
-					new string[]{"4", "Spade"},
-				},
-				Chips = 0
-			};
+				case 2:
+					room.Chair0 = users[0];
+					room.Chair1 = users[1];
+					room.PotOfChair0 = UserBets[0];
+					room.PotOfChair1 = UserBets[1];
+					break;
+				case 3: 
+					room.Chair0 = users[0];
+					room.Chair1 = users[1];
+					room.Chair2 = users[2];
+					room.PotOfChair0 = UserBets[0];
+					room.PotOfChair1 = UserBets[1];
+					room.PotOfChair2 = UserBets[2];
+					break;
+				case 4:
+					room.Chair0 = users[0];
+					room.Chair1 = users[1];
+					room.Chair2 = users[2];
+					room.Chair3 = users[3];
+					room.PotOfChair0 = UserBets[0];
+					room.PotOfChair1 = UserBets[1];
+					room.PotOfChair2 = UserBets[2];
+					room.PotOfChair3 = UserBets[3];
+					break;
+				case 5:
+					room.Chair0 = users[0];
+					room.Chair1 = users[1];
+					room.Chair2 = users[2];
+					room.Chair3 = users[3];
+					room.Chair4 = users[4];
+					room.PotOfChair0 = UserBets[0];
+					room.PotOfChair1 = UserBets[1];
+					room.PotOfChair2 = UserBets[2];
+					room.PotOfChair3 = UserBets[3];
+					room.PotOfChair4 = UserBets[4];
+					break;
+				case 6:
+					room.Chair0 = users[0];
+					room.Chair1 = users[1];
+					room.Chair2 = users[2];
+					room.Chair3 = users[3];
+					room.Chair4 = users[4];
+					room.Chair5 = users[5];
+					room.PotOfChair0 = UserBets[0];
+					room.PotOfChair1 = UserBets[1];
+					room.PotOfChair2 = UserBets[2];
+					room.PotOfChair3 = UserBets[3];
+					room.PotOfChair4 = UserBets[4];
+					room.PotOfChair5 = UserBets[5];
+					break;
+			}
+				
 
-			ApplicationUser user4 = new ApplicationUser
-			{
-				Name = "D",
-				PlayerCards = new List<string[]>
-				{
-					new string[]{"14", "Spade"},
-					new string[]{"3", "Heart"},
-				},
-				Chips = 0
-			};
-
-			room.Chair0 = user1;
-			room.Chair2 = user2;
-			room.Chair3 = user3;
-			room.Chair4 = user4;
-
-			room.PotOfChair0 = 25;
-			room.PotOfChair2 = 50;
-			room.PotOfChair3 = 100;
-			room.PotOfChair4 = 100;
-
-
-			var result = room.SpreadMoneyToWinners();
-
-			U1rank = (room.GetPlayerHandRank(user1)).Rank;
-			U2rank = (room.GetPlayerHandRank(user2)).Rank;
-			GD.Print(U1rank +" "+ U2rank );
+			//room.PotOfChair0 = 25;
+			//room.PotOfChair2 = 50;
+			//room.PotOfChair3 = 100;
+			//room.PotOfChair4 = 100;
 			
-			U1rankName = (room.GetPlayerHandRank(user1)).RankName;
-			U2rankName = (room.GetPlayerHandRank(user2)).RankName;
-			GD.Print(U1rankName +" "+ U2rankName );
-
+			var result = room.SpreadMoneyToWinners();
+			GD.Print("Winners");
+			int i = 0;
+			//foreach (var res in result)
+			//{
+				foreach (var user in result[0].Winners)
+				{
+					WinnersList.Add(user.Name);
+					GD.Print(user.Name);
+				}
+				i++;
+			//}
+				WinnerNames = WinnersList.ToArray();
+				GD.Print(result[0].RankName);
+				GD.Print(result[0].PotAmount);
+				GD.Print(result[0].OriginalPotAmount);
+			GD.Print("Winner End");
 		}
 }

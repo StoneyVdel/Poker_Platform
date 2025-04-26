@@ -1,0 +1,48 @@
+[gd_scene load_steps=12 format=3 uid="uid://dt1nx473u4lyg"]
+
+[ext_resource type="Script" uid="uid://cilfjdp27ucu0" path="res://Scripts/Multiplayer/server.gd" id="1_2j3bd"]
+[ext_resource type="Script" uid="uid://cgoyucloc27wj" path="res://Scripts/Multiplayer/game_manager.gd" id="2_64cec"]
+[ext_resource type="Script" uid="uid://dqx0cra2baa6w" path="res://Scripts/Multiplayer/Program.cs" id="3_jlmev"]
+[ext_resource type="Script" uid="uid://bw8poc3cl8ly6" path="res://Scripts/Multiplayer/Room.cs" id="4_yjshk"]
+[ext_resource type="Script" uid="uid://bmmnodsbjv3mi" path="res://Scripts/Multiplayer/ApplicationUser.cs" id="5_ypnp5"]
+[ext_resource type="Script" uid="uid://d3ae230uwmejd" path="res://Scripts/Multiplayer/json.gd" id="6_oh2vy"]
+[ext_resource type="Script" uid="uid://fvey14c8nsa7" path="res://Scripts/Multiplayer/deck.gd" id="7_xfpg8"]
+[ext_resource type="Script" uid="uid://banxy56nrgm3q" path="res://Scripts/Multiplayer/table.gd" id="8_msnlj"]
+[ext_resource type="Script" uid="uid://tl4b4pjgiq88" path="res://Scene/Multiplayer/player.gd" id="9_yjshk"]
+[ext_resource type="Script" uid="uid://cr4xx5yj8klj4" path="res://Scene/Multiplayer/opponent.gd" id="10_ypnp5"]
+[ext_resource type="Script" uid="uid://bcmtbu76reoc8" path="res://Scene/Multiplayer/visuals.gd" id="11_oh2vy"]
+
+[node name="Server" type="Node"]
+script = ExtResource("1_2j3bd")
+
+[node name="GameLogic" type="Node" parent="."]
+script = ExtResource("8_msnlj")
+
+[node name="GameManager" type="Node" parent="."]
+script = ExtResource("2_64cec")
+
+[node name="HandEvaluator" type="Node" parent="."]
+script = ExtResource("3_jlmev")
+
+[node name="Room" type="Node" parent="HandEvaluator"]
+script = ExtResource("4_yjshk")
+
+[node name="ApplicationUser" type="Node" parent="HandEvaluator"]
+script = ExtResource("5_ypnp5")
+
+[node name="JSON" type="Node" parent="."]
+script = ExtResource("6_oh2vy")
+
+[node name="DeckLogic" type="Node" parent="."]
+script = ExtResource("7_xfpg8")
+
+[node name="TempTimer" type="Timer" parent="."]
+
+[node name="Player" type="Node2D" parent="."]
+script = ExtResource("9_yjshk")
+
+[node name="Opponent" type="Node2D" parent="."]
+script = ExtResource("10_ypnp5")
+
+[node name="Visuals" type="Node" parent="."]
+script = ExtResource("11_oh2vy")

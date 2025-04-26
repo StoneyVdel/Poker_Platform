@@ -14,3 +14,7 @@ func lose():
 	$State_Label.add_theme_font_size_override("font_size", 140)
 	$AnimationPlayer.play("WinState")
 	$ColorRect.mouse_filter = 0
+
+func renew():
+	$AnimationPlayer.play_backwards("WinState")
+	$ColorRect.mouse_filter = 2

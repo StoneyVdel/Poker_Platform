@@ -1,104 +1,19 @@
-[gd_scene load_steps=17 format=3 uid="uid://deqkcwgx7qlcf"]
+[gd_scene load_steps=11 format=3 uid="uid://deqkcwgx7qlcf"]
 
-[ext_resource type="Script" uid="uid://banxy56nrgm3q" path="res://Scripts/table.gd" id="1_twwsd"]
+[ext_resource type="Script" uid="uid://c2u47qj0jtxql" path="res://Scripts/game.gd" id="1_8f6ah"]
 [ext_resource type="Texture2D" uid="uid://b40cyrxemxjg1" path="res://Assets/Table.jpg" id="2_c6b8m"]
 [ext_resource type="PackedScene" uid="uid://ut61nrnralnv" path="res://Scene/outline.tscn" id="3_0ka5k"]
 [ext_resource type="PackedScene" uid="uid://cdc2q67c85bbb" path="res://Scene/deck.tscn" id="4_ha7wd"]
 [ext_resource type="Script" uid="uid://cqutqs1oxod6c" path="res://Scripts/visuals.gd" id="4_yjs1f"]
 [ext_resource type="Script" uid="uid://bngm68apw512i" path="res://Scripts/player.gd" id="5_yjs1f"]
 [ext_resource type="Script" uid="uid://b3xgxouvoulyw" path="res://Scripts/opponent_hand.gd" id="6_vyw1f"]
-[ext_resource type="Script" uid="uid://cgoyucloc27wj" path="res://Scripts/game_manager.gd" id="7_cvvdq"]
-[ext_resource type="Script" uid="uid://dqx0cra2baa6w" path="res://Scripts/Program.cs" id="8_m52p7"]
-[ext_resource type="Script" uid="uid://bw8poc3cl8ly6" path="res://Scripts/Room.cs" id="9_vy0et"]
-[ext_resource type="Script" uid="uid://bmmnodsbjv3mi" path="res://Scripts/ApplicationUser.cs" id="10_sqb0o"]
 [ext_resource type="PackedScene" uid="uid://ba3dxya8gqde4" path="res://Scene/pause_menu.tscn" id="11_c6b8m"]
 [ext_resource type="PackedScene" uid="uid://crgqrkbx5v0nt" path="res://Scene/win_state.tscn" id="12_0ka5k"]
-[ext_resource type="Script" uid="uid://d3ae230uwmejd" path="res://Scripts/json.gd" id="13_ha7wd"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0ka5k"]
 
-[sub_resource type="GDScript" id="GDScript_3pt4j"]
-script/source = "extends Node
-#
-#const HANDS = {
-	#\"High_card\": 1,
-	#\"One_pair\" : 2,
-	#\"Two_pair\" : 3,
-	#\"Three_of_a_kind\" : 4,
-	#\"Straight\" : 5,
-	#\"Flush\" : 6,
-	#\"Full_house\" : 7,
-	#\"Four_of_a_kind\" : 8,
-	#\"Straight_flush\" : 9,
-	#\"Royal_flush\" : 10
-#}
-#
-#var table_ref
-#var deck_ref
-#
-#func _ready() -> void:
-	#table_ref = $\"../Table\"
-	#deck_ref = $\"../Deck\"
-	#
-#func check_rank(player_hand):
-	#var full_hand = player_hand + table_ref.table_cards
-	#var full_hand_sorted = sort_hand(full_hand)
-	#flush(full_hand_sorted)
-	#of_kind(full_hand_sorted)
-	#
-#func sort_hand(hand):
-	##hand = [\"Ace_Clubs\", \"King_Clubs\", \"Queen_Clubs\", \"Jack_Clubs\", \"Ten_Clubs\"]
-	#hand = [\"Ace_Clubs\", \"Ace_Diamonds\", \"Queen_Spades\", \"Ten_Hearts\", \"Ten_Clubs\", \"Ten_Diamonds\", \"Ten_Spades\"]
-	#var temp_sort_values = []
-	#var temp_dict = {}
-	#var temp_cards = []
-	#
-	#for i in range(hand.size()):
-		#temp_sort_values.insert(i, deck_ref.deck_full[hand[i]][0])
-		#temp_cards.insert(i, hand[i])
-#
-	#for i in range(temp_sort_values.size()):
-		#for j in range(temp_sort_values.size()):
-			#if temp_sort_values[j] < temp_sort_values[i]:
-				#var temp_value = temp_sort_values[i]
-				#var temp_card = temp_cards[i]
-				#temp_sort_values[i] =  temp_sort_values[j]
-				#temp_cards[i] = temp_cards[j] 
-				#temp_sort_values[j] = temp_value
-				#temp_cards[j] = temp_card
-				#
-	#for i in temp_cards:
-		#temp_dict[i] = []
-		#temp_dict[i] = deck_ref.deck_full[i]
-	#return temp_dict
-	#
-#func flush(hand):
-	#var is_flush = true
-	#var is_royal = true
-	#var first_card = hand.keys()[0]
-	#var i = 0
-	#for card in hand:
-		#if hand[card][0] != ((hand[first_card][0]) - i):
-			#is_flush = false
-		#if hand[card][1] != hand[first_card][1]:
-			#is_royal = false
-		#i+=1
-	#pass
-	#
-#func of_kind(hand):
-	#var kinds = 0
-	#var last_card = hand.keys()[0]
-	#for i in (hand.size()):
-		#if i+1 < hand.size():
-			#last_card = hand.keys()[i+1]
-		#else:
-			#last_card = \"\"
-		#if hand[hand.keys()[i]][0] == hand[last_card][0]:
-			#kinds+=1
-	#pass
-"
-
 [node name="Main" type="Node2D"]
+script = ExtResource("1_8f6ah")
 
 [node name="Chairs" type="Node" parent="."]
 
@@ -110,10 +25,13 @@ position = Vector2(720, 220)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Chairs/Chair1/Area2D"]
 shape = SubResource("CircleShape2D_0ka5k")
 
-[node name="Label" type="Label" parent="Chairs/Chair1"]
-offset_right = 100.0
+[node name="Label" type="RichTextLabel" parent="Chairs/Chair1"]
+offset_right = 130.0
 offset_bottom = 63.0
-theme_override_font_sizes/font_size = 45
+theme_override_font_sizes/normal_font_size = 40
+fit_content = true
+scroll_active = false
+shortcut_keys_enabled = false
 
 [node name="Chair2" type="Node2D" parent="Chairs"]
 position = Vector2(1150, 220)
@@ -123,10 +41,13 @@ position = Vector2(1150, 220)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Chairs/Chair2/Area2D"]
 shape = SubResource("CircleShape2D_0ka5k")
 
-[node name="Label" type="Label" parent="Chairs/Chair2"]
-offset_right = 100.0
+[node name="Label" type="RichTextLabel" parent="Chairs/Chair2"]
+offset_right = 130.0
 offset_bottom = 63.0
-theme_override_font_sizes/font_size = 45
+theme_override_font_sizes/normal_font_size = 40
+fit_content = true
+scroll_active = false
+shortcut_keys_enabled = false
 
 [node name="Chair3" type="Node2D" parent="Chairs"]
 position = Vector2(350, 519)
@@ -136,10 +57,13 @@ position = Vector2(350, 519)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Chairs/Chair3/Area2D"]
 shape = SubResource("CircleShape2D_0ka5k")
 
-[node name="Label" type="Label" parent="Chairs/Chair3"]
-offset_right = 100.0
+[node name="Label" type="RichTextLabel" parent="Chairs/Chair3"]
+offset_right = 130.0
 offset_bottom = 63.0
-theme_override_font_sizes/font_size = 45
+theme_override_font_sizes/normal_font_size = 40
+fit_content = true
+scroll_active = false
+shortcut_keys_enabled = false
 
 [node name="Chair4" type="Node2D" parent="Chairs"]
 position = Vector2(720, 870)
@@ -149,10 +73,13 @@ position = Vector2(720, 870)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Chairs/Chair4/Area2D"]
 shape = SubResource("CircleShape2D_0ka5k")
 
-[node name="Label" type="Label" parent="Chairs/Chair4"]
-offset_right = 100.0
+[node name="Label" type="RichTextLabel" parent="Chairs/Chair4"]
+offset_right = 130.0
 offset_bottom = 63.0
-theme_override_font_sizes/font_size = 45
+theme_override_font_sizes/normal_font_size = 40
+fit_content = true
+scroll_active = false
+shortcut_keys_enabled = false
 
 [node name="Chair5" type="Node2D" parent="Chairs"]
 position = Vector2(1150, 870)
@@ -162,10 +89,13 @@ position = Vector2(1150, 870)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Chairs/Chair5/Area2D"]
 shape = SubResource("CircleShape2D_0ka5k")
 
-[node name="Label" type="Label" parent="Chairs/Chair5"]
-offset_right = 100.0
+[node name="Label" type="RichTextLabel" parent="Chairs/Chair5"]
+offset_right = 130.0
 offset_bottom = 63.0
-theme_override_font_sizes/font_size = 45
+theme_override_font_sizes/normal_font_size = 40
+fit_content = true
+scroll_active = false
+shortcut_keys_enabled = false
 
 [node name="Chair6" type="Node2D" parent="Chairs"]
 position = Vector2(1570, 519)
@@ -175,13 +105,15 @@ position = Vector2(1570, 519)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Chairs/Chair6/Area2D"]
 shape = SubResource("CircleShape2D_0ka5k")
 
-[node name="Chair6_Label" type="Label" parent="Chairs/Chair6"]
-offset_right = 100.0
+[node name="Label" type="RichTextLabel" parent="Chairs/Chair6"]
+offset_right = 130.0
 offset_bottom = 63.0
-theme_override_font_sizes/font_size = 45
+theme_override_font_sizes/normal_font_size = 40
+fit_content = true
+scroll_active = false
+shortcut_keys_enabled = false
 
 [node name="Table" type="Node2D" parent="."]
-script = ExtResource("1_twwsd")
 
 [node name="Background" type="Sprite2D" parent="Table"]
 position = Vector2(960, 540)
@@ -325,28 +257,11 @@ script = ExtResource("4_yjs1f")
 position = Vector2(1400, 520)
 scale = Vector2(0.6, 0.6)
 
-[node name="Player" type="Node2D" parent="."]
-script = ExtResource("5_yjs1f")
-
-[node name="OpponentHand" type="Node2D" parent="."]
+[node name="Opponent" type="Node2D" parent="."]
 script = ExtResource("6_vyw1f")
 
-[node name="Hands" type="Node" parent="."]
-script = SubResource("GDScript_3pt4j")
-
-[node name="GameManager" type="Node" parent="."]
-script = ExtResource("7_cvvdq")
-
-[node name="TempTimer" type="Timer" parent="."]
-
-[node name="HandEvaluator" type="Node" parent="."]
-script = ExtResource("8_m52p7")
-
-[node name="Room" type="Node" parent="HandEvaluator"]
-script = ExtResource("9_vy0et")
-
-[node name="ApplicationUser" type="Node" parent="HandEvaluator"]
-script = ExtResource("10_sqb0o")
+[node name="Player" type="Node2D" parent="."]
+script = ExtResource("5_yjs1f")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -357,14 +272,15 @@ mouse_filter = 2
 
 [node name="WinState" parent="CanvasLayer2" instance=ExtResource("12_0ka5k")]
 
-[node name="JSON" type="Node" parent="."]
-script = ExtResource("13_ha7wd")
-
 [node name="ActionLog" type="RichTextLabel" parent="."]
 offset_right = 450.0
 offset_bottom = 200.0
 theme_override_font_sizes/normal_font_size = 16
 scroll_following = true
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+spawn_path = NodePath("../Chairs")
+spawn_limit = 6
 
 [connection signal="pressed" from="ActionControl/Call" to="Player" method="_on_call_pressed"]
 [connection signal="pressed" from="ActionControl/Fold" to="Player" method="_on_fold_pressed"]
@@ -375,4 +291,3 @@ scroll_following = true
 [connection signal="button_down" from="BetControl/Subtract" to="Player" method="_on_subtract_button_down"]
 [connection signal="button_up" from="BetControl/Subtract" to="Player" method="_on_subtract_button_up"]
 [connection signal="pressed" from="BetControl/Subtract" to="Player" method="_on_subtract_pressed"]
-[connection signal="timeout" from="TimeoutTimer" to="GameManager" method="_on_timeout_timer_timeout"]

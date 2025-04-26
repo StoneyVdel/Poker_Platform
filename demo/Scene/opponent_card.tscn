@@ -1,12 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://cm5ho7dthlci4"]
+[gd_scene load_steps=2 format=3 uid="uid://cm5ho7dthlci4"]
 
 [ext_resource type="Texture2D" uid="uid://dhsg705aydu76" path="res://Assets/Card_Back.png" id="1_m8yje"]
 
-[sub_resource type="GDScript" id="GDScript_fc131"]
-
 [node name="OpponentHand" type="Node2D"]
 position = Vector2(1699, 509)
-script = SubResource("GDScript_fc131")
 
 [node name="Card_Image" type="Sprite2D" parent="."]
 scale = Vector2(1.4, 1.4)

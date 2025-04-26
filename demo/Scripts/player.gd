@@ -1,100 +1,137 @@
 extends Node2D
 
-const OPPONENT_CARD_SCENE = "res://Scene/opponent_card.tscn"
-
-var deck_ref
-var table_ref
-var game_manager_ref
 var visuals_ref
+var opponent_ref
 
 var timeout_timer
-var current_raise
+var current_raise = 0
 var player_cards
-var bet
+var coins
+var player_id 
+
 var is_add_button_down = false
 var is_subtract_button_down = false
 var i = 0
+var timeout_time = 5
+var increase_amount
+var raise_check_user
+var last_bet_user
+var min_value = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	deck_ref = $"../Deck"
-	table_ref = $"../Table"
-	game_manager_ref = $"../GameManager"
 	visuals_ref = $"../Visuals"
-	current_raise = table_ref.increase_amount
 	timeout_timer = $"../TimeoutTimer"
+	opponent_ref = $"../Opponent"
 	timeout_timer.one_shot = true
 
-func init():
-	player_cards = table_ref.get_cards("Player")
-	bet = table_ref.get_bets("Player")
-	
-	#Getting card images for the player cards
-	visuals_ref.draw_card_image(player_cards, $".")
-	
-	for user in table_ref.players:
-		if user != "Player":
-			$"../OpponentHand".opponent_card_draw(2, user)
 
+@rpc("authority","call_remote", "reliable", 0)
+func add_players_to_table(user_id, chair_id):
+	opponent_ref.opponent_card_draw(2, user_id, chair_id)
+	pass
+	
+@rpc("authority", "call_remote", "reliable", 0)
+func set_player_id(id: int):
+	player_id=id
+	print(player_id)
+	
+@rpc("authority", "call_remote", "unreliable", 0)
+func set_increase_amount(amount):
+	increase_amount = amount
+
+@rpc("authority", "call_remote", "reliable", 0)
+func init(player_cards: Array, coin:int, inc_ammount:int):
+	print("Initializing")
+	#Getting card images for the player cards
+	visuals_ref.draw_card_image(player_cards, "Player") 
 	visuals_ref.raise_label.text = str(current_raise)
-	visuals_ref.set_label(visuals_ref.coin_label)
+	coins = coin
+	increase_amount = inc_ammount
+	visuals_ref.set_label("coin_label", coins)
 	#Showing the betting coins of the player
 	#stake_label_set_text(bet)
 
-func call_func():
-	timeout_timer.stop()
-	if table_ref.players_state[game_manager_ref.current_user][1] == true:
-		bet = table_ref.get_bets("Player")
-		if table_ref.last_bet > bet:
-			table_ref.table_bet(bet, game_manager_ref.current_user, "Call")
-		else :
-			table_ref.table_bet(table_ref.last_bet, game_manager_ref.current_user, "Call")
-		bet = table_ref.get_bets("Player")
-		raise_check()
-		visuals_ref.set_label(visuals_ref.coin_label)
-	end_move(game_manager_ref.current_user, "Call")
+@rpc("authority", "call_remote", "reliable", 0)
+func get_coins(player_id:int):
+	pass
 	
-func end_move(user, action):
+@rpc("authority", "call_remote", "reliable", 0)
+func set_coins(coin:int):
+	coins=coin
+	print(coins)
+	visuals_ref.set_label("coin_label", coins)
+	
+@rpc("authority", "call_remote", "reliable", 0)
+func user_turn(raise_check: bool, last_bet:int):
+	$"../ActionControl/Call".disabled = false
+	$"../ActionControl/Fold".disabled = false
+	$"../ActionControl/Raise".disabled = false
+	
+	timeout_timer.wait_time = timeout_time
+	raise_check_user = raise_check
+	last_bet_user = last_bet
+	#player_ref.timeout_timer.start()
+	
+func call_func(check_if_raise, last_bet):
+	timeout_timer.stop()
+	var action = "Check"
+	if check_if_raise == true:
+		action= "Call"
+		get_coins.rpc_id(1, player_id)
+		if last_bet > coins:
+			#Send to backend
+			user_raise.rpc_id(1, player_id, coins, "Call")
+		else :
+			#Send to backend
+			user_raise.rpc_id(1, player_id, last_bet, "Call")
+		get_coins.rpc_id(1, player_id)
+		raise_check()
+		visuals_ref.set_label("coin_label", coins)
+	end_move(player_id, action)
+
+func end_move(user_id: int, action: String):
+	disable_user_input()
+	server_end_move.rpc_id(1, user_id, action)
+	#change to get info from server
+	#visuals_ref.update_action_log(user+" "+action)
+
+@rpc("authority", "call_remote", "reliable", 0)
+func disable_user_input():
 	$"../ActionControl/Call".disabled = true
 	$"../ActionControl/Fold".disabled = true
 	$"../ActionControl/Raise".disabled = true
-	
-	table_ref.players_state[user][0] = true
-	visuals_ref.update_action_log(user+" "+action)
-	game_manager_ref.current_user = find_next_user(user)
-	
-	game_manager_ref.rotation()
 
-func find_next_user(user):
-	var next_user_index = table_ref.players.find(user)+1
-	var next_user
-	if next_user_index < table_ref.players.size():
-		next_user = table_ref.players[next_user_index]
-	else :
-		next_user = table_ref.players[0]
-	return next_user
+@rpc("authority", "call_remote", "reliable", 0)
+func server_end_move(user_id: int):
+	print("It works here ?")
+	
 	
 func check_raise_values(add):
 	if add == true:
-		if current_raise < bet:
-			current_raise+=table_ref.increase_amount
+		if current_raise < coins:
+			current_raise+= increase_amount
 		else :
 			pass
 	if add == false:
-		if table_ref.players_state[game_manager_ref.current_user][1] == true:
-			if current_raise > table_ref.last_bet:
-				current_raise-= table_ref.increase_amount
-		elif current_raise > table_ref.increase_amount:
-			current_raise-= table_ref.increase_amount
+		if min_value > 0:
+			if current_raise > min_value:
+				current_raise-= increase_amount
+		elif current_raise > increase_amount:
+			current_raise-= increase_amount
 		
-	visuals_ref.set_label(visuals_ref.raise_label, str(current_raise))
+	visuals_ref.set_label("raise_label", str(current_raise))
 	i=0
 
 func raise_check():
-	if current_raise > bet:
-			while current_raise > bet:
-				current_raise-= table_ref.increase_amount
-			visuals_ref.set_label(visuals_ref.raise_label, str(current_raise))
+	if current_raise > coins:
+			while current_raise > coins:
+				current_raise-= increase_amount
+			visuals_ref.set_label("raise_label", str(current_raise))
+
+@rpc("authority", "call_remote", "reliable", 0)
+func folded(player_id:int):
+	pass
 	
 func _process(_delta):
 	if is_add_button_down:
@@ -105,26 +142,34 @@ func _process(_delta):
 		if i == 80:
 			check_raise_values(false)
 		i+=1
-
+		
+@rpc("any_peer", "call_remote", "reliable", 0)
+func user_raise(user_id: int, raise: int):
+	pass
+	
+@rpc("authority", "call_remote", "reliable", 0)
+func set_raise(raise: int):
+	current_raise = raise
+	min_value = raise
+	visuals_ref.set_label("raise_label", str(current_raise))
+	
 func _on_call_pressed() -> void:
-	call_func()
+	call_func(raise_check_user, last_bet_user)
+	min_value = 0
 
 func _on_fold_pressed() -> void:
-	end_move(game_manager_ref.current_user, "Fold")
-	table_ref.players_state[table_ref.players.find("Player")][2] = true
-	get_tree().pause()
-	get_tree().change_scene_to_file("res://Scene/menu.tscn")
+	end_move(player_id, "Folded")
+	folded.rpc_id(1, player_id)
 	timeout_timer.stop()
 
 func _on_raise_pressed() -> void:
 	timeout_timer.stop()
-	table_ref.table_bet(current_raise, game_manager_ref.current_user, "Raise")
-	bet = table_ref.get_bets("Player")
-	table_ref.reset_user_state()
+	min_value = 0
+	user_raise.rpc_id(1, player_id, current_raise, "Raise")
 	raise_check()
 	#DRY
-	visuals_ref.set_label(visuals_ref.coin_label)
-	end_move(game_manager_ref.current_user,"Raise")
+	visuals_ref.set_label("coin_label", coins)
+	end_move(player_id, "Raised")
 
 func _on_add_pressed() -> void:
 	check_raise_values(true)
@@ -133,7 +178,7 @@ func _on_subtract_pressed() -> void:
 	check_raise_values(false)
 
 func _on_timeout_timer_timeout() -> void:
-	end_move(game_manager_ref.current_user, "Fold")
+	end_move(player_id, "Folded (Ran out of time)")
 	_on_fold_pressed()
 
 

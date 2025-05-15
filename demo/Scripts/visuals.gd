@@ -2,11 +2,14 @@ extends Node
 
 const CARD_SCENE = "res://Scene/card.tscn"
 const CARD_WIDTH = 124*1
+const animation_time = 5
 
+var stage = "pre"
 var coin_label
 var raise_label
 var total_bets_label
 var action_scene_label
+var card_rank_label
 var action_timer
 var deck_ref
 var screen_size
@@ -16,24 +19,41 @@ var chairs
 var player_ref 
 var chair_info_player
 var OutlinePos = []
+var hand_eval_ref
+var out_chance_label
+var suggested_move_label
+var chat_edit
 
 func _ready() -> void:
 	coin_label = $"../CoinLabel"
 	raise_label = $"../BetControl/RaiseLabel"
 	total_bets_label = $"../TotalBetLabel"
 	action_timer = $"../ActionTimer"
-	action_log = $"../ActionLog"
+	action_log = $"../Chat/ActionLog"
 	player_ref = $"../Player"
+	hand_eval_ref = $"../HandEvaluatorClient"
 	chairs = $"../Chairs".get_children()
+	card_rank_label = $"../Analytics/CardRank"
+	out_chance_label = $"../Analytics/OutChance"
+	suggested_move_label = $"../Analytics/SuggestedMove"
+	chat_edit = $"../Chat/ChatEdit"
+	
 	screen_size = get_viewport().size
 	
 func animate_card_to_position(card, new_position):
 	var tween = get_tree().create_tween()
 	tween.tween_property(card, "position", new_position, 0.65)
 
+func set_analytics(hand_rank, out_chance):
+	card_rank_label.text = str("Current card rank: ", hand_eval_ref.hand_rank_to_string(hand_rank))
+	out_chance_label.text = str("Chances to out: ", out_chance, "%")
+	
+	
 @rpc("authority", "call_remote", "reliable", 0)
 func draw_card_image(hand:Array, node:String):
-	print(hand, node)
+	if node == "Outlines":
+		for card in hand:
+				player_ref.all_cards.append(card)
 	var card_scene = load(CARD_SCENE)
 	for i in range(hand.size()):
 		var new_card = card_scene.instantiate()
@@ -57,10 +77,12 @@ func add_card_to_hand(card, index, chair_id):
 
 @rpc("authority", "call_remote", "reliable", 0)
 func cards_to_outline(game_stage: String):
+	stage=game_stage
 	if game_stage == "flop":
 		OutlinePos.append($"../Outlines/Outline5".position)
 		OutlinePos.append($"../Outlines/Outline4".position)
 		OutlinePos.append($"../Outlines/Outline3".position)
+		hand_eval_ref
 			
 	elif game_stage == "turn":
 		OutlinePos.insert(0, $"../Outlines/Outline2".position)
@@ -88,7 +110,7 @@ func set_label(label, text=""):
 	if label == "raise_label":
 		raise_label.text = str(text)
 		
-@rpc("authority", "call_remote", "reliable", 0)
+@rpc("any_peer", "call_remote", "reliable", 0)
 func update_action_log(action: String):
 	action_log.text += str(action, "\n")
 
@@ -96,21 +118,20 @@ func update_action_log(action: String):
 func set_chair(chair_info : Dictionary):
 	chair_info_player = chair_info
 	for id in chair_info:
-		print("ID:", id, "User:", chair_info[id])
+		print("ID: ", id, " User: ", chair_info[id])
 		chairs[id].get_node("Label").text = str(chair_info[id])
 
 @rpc("authority", "call_remote", "reliable", 0)
 func win_state(state):
 	if state == 1:
-		print("You win !")
 		$"../CanvasLayer2/WinState".win()
 	else :
-		print("You lose !")
 		$"../CanvasLayer2/WinState".lose()
-	
-	action_timer.set_wait_time(5)
+	player_ref.timeout_time+=animation_time
+	action_timer.set_wait_time(animation_time)
 	action_timer.start()
 	await action_timer.timeout
+	player_ref.timeout_time-=animation_time
 	$"../CanvasLayer2/WinState".renew()
 	var nodes = get_tree().get_nodes_in_group("Outlines")
 	free_node(nodes)
@@ -119,20 +140,22 @@ func win_state(state):
 		nodes = get_tree().get_nodes_in_group(str(user, "cards"))
 		free_node(nodes)
 	OutlinePos.clear()
-	pass
-	#set_label("total_bets_label", str(table_ref.table_bets))
 
 func free_node(nodes):
 	for node in nodes:
 			node.queue_free()
-			
+
 @rpc("authority", "call_remote", "reliable", 0)
 func clear_chair(user):
-	#var user_index = players.find(user)
-	#var next_user = player_ref.find_next_user(user)
 	var nodes = get_tree().get_nodes_in_group(user)
 	for node in nodes:
-		node.queue_free()
+		node.find_child("Label").text= ""
 	nodes = get_tree().get_nodes_in_group(str(user,"cards"))
-	for node in nodes:
-		node.queue_free()
+	free_node(nodes)
+
+
+func _on_send_btn_pressed() -> void:
+	var text = str(player_ref.player_id, ":", chat_edit.text)
+	chat_edit.text = ""
+	update_action_log(text)
+	update_action_log.rpc(text)

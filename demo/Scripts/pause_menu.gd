@@ -6,12 +6,10 @@ func _ready():
 	$AnimationPlayer.play("RESET")
 	
 func resume():
-	#get_tree().paused = false
 	$AnimationPlayer.play_backwards("blur")
 	$ColorRect.mouse_filter = 2
 	
 func pause():
-	#get_tree().paused = true
 	$AnimationPlayer.play("blur")
 	$ColorRect.mouse_filter = 0
 	
@@ -32,10 +30,12 @@ func _on_options_pressed() -> void:
 
 
 func _on_menu_pressed() -> void:
+	multiplayer.multiplayer_peer.disconnect_peer(1)
 	get_tree().change_scene_to_file("res://Scene/menu.tscn")
 
 
 func _on_quit_pressed() -> void:
+	multiplayer.multiplayer_peer.disconnect_peer(1)
 	get_tree().quit()
 
 func _process(_delta):

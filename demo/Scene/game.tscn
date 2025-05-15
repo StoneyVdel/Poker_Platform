@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://deqkcwgx7qlcf"]
+[gd_scene load_steps=12 format=3 uid="uid://deqkcwgx7qlcf"]
 
 [ext_resource type="Script" uid="uid://c2u47qj0jtxql" path="res://Scripts/game.gd" id="1_8f6ah"]
 [ext_resource type="Texture2D" uid="uid://b40cyrxemxjg1" path="res://Assets/Table.jpg" id="2_c6b8m"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://cqutqs1oxod6c" path="res://Scripts/visuals.gd" id="4_yjs1f"]
 [ext_resource type="Script" uid="uid://bngm68apw512i" path="res://Scripts/player.gd" id="5_yjs1f"]
 [ext_resource type="Script" uid="uid://b3xgxouvoulyw" path="res://Scripts/opponent_hand.gd" id="6_vyw1f"]
+[ext_resource type="Script" uid="uid://bal5ymdumy8d3" path="res://Scripts/HandEvaluatorClient.gd" id="10_twwsd"]
 [ext_resource type="PackedScene" uid="uid://ba3dxya8gqde4" path="res://Scene/pause_menu.tscn" id="11_c6b8m"]
 [ext_resource type="PackedScene" uid="uid://crgqrkbx5v0nt" path="res://Scene/win_state.tscn" id="12_0ka5k"]
 
@@ -263,24 +264,107 @@ script = ExtResource("6_vyw1f")
 [node name="Player" type="Node2D" parent="."]
 script = ExtResource("5_yjs1f")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("11_c6b8m")]
-mouse_filter = 2
-
 [node name="CanvasLayer2" type="CanvasLayer" parent="."]
 
 [node name="WinState" parent="CanvasLayer2" instance=ExtResource("12_0ka5k")]
 
-[node name="ActionLog" type="RichTextLabel" parent="."]
-offset_right = 450.0
-offset_bottom = 200.0
-theme_override_font_sizes/normal_font_size = 16
-scroll_following = true
-
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath("../Chairs")
 spawn_limit = 6
+
+[node name="TimeoutLabel" type="Label" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = 1820.0
+offset_top = 691.0
+offset_right = 1920.0
+offset_bottom = 751.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 40
+
+[node name="HandEvaluatorClient" type="Node" parent="."]
+script = ExtResource("10_twwsd")
+
+[node name="Analytics" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 1520.0
+offset_right = 1920.0
+offset_bottom = 240.0
+
+[node name="CardRank" type="Label" parent="Analytics"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 20
+
+[node name="OutChance" type="Label" parent="Analytics"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -11.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 20
+
+[node name="SuggestedMove" type="Label" parent="Analytics"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 20
+
+[node name="Chat" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 450.0
+offset_bottom = 280.0
+
+[node name="ActionLog" type="RichTextLabel" parent="Chat"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 200.0
+grow_horizontal = 2
+theme_override_font_sizes/normal_font_size = 16
+scroll_following = true
+
+[node name="ChatEdit" type="TextEdit" parent="Chat"]
+layout_mode = 0
+offset_top = 200.0
+offset_right = 350.0
+offset_bottom = 280.0
+theme_override_font_sizes/font_size = 28
+text = "Hello"
+
+[node name="SendBtn" type="Button" parent="Chat"]
+custom_minimum_size = Vector2(100, 80)
+layout_mode = 0
+offset_left = 350.0
+offset_top = 200.0
+offset_right = 450.0
+offset_bottom = 280.0
+theme_override_font_sizes/font_size = 30
+text = "Send"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("11_c6b8m")]
+mouse_filter = 2
 
 [connection signal="pressed" from="ActionControl/Call" to="Player" method="_on_call_pressed"]
 [connection signal="pressed" from="ActionControl/Fold" to="Player" method="_on_fold_pressed"]
@@ -291,3 +375,4 @@ spawn_limit = 6
 [connection signal="button_down" from="BetControl/Subtract" to="Player" method="_on_subtract_button_down"]
 [connection signal="button_up" from="BetControl/Subtract" to="Player" method="_on_subtract_button_up"]
 [connection signal="pressed" from="BetControl/Subtract" to="Player" method="_on_subtract_pressed"]
+[connection signal="pressed" from="Chat/SendBtn" to="Visuals" method="_on_send_btn_pressed"]

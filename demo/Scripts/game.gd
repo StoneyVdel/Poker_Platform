@@ -8,7 +8,6 @@ func _ready() -> void:
 	player_ref = $Player
 	opponent_ref = $Opponent
 	visuals_ref = $Visuals
-	#visuals_ref.set_chair(0, "Player")
 
 func get_cards():
 	pass

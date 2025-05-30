@@ -34,7 +34,7 @@ placeholder_text = "Ip address"
 [node name="Port" type="LineEdit" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 60
-text = "1492"
+text = "2055"
 placeholder_text = "Port"
 
 [node name="JoinGame" type="Button" parent="VBoxContainer"]

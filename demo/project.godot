@@ -16,6 +16,11 @@ config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 boot_splash/show_image=false
 config/icon="res://Assets/icon.svg"
 
+[autoload]
+
+Database="*res://Database.tscn"
+ClientData="*res://Scripts/client_data.gd"
+
 [display]
 
 window/size/viewport_width=1920

@@ -1,7 +1,11 @@
 extends Node
 var is_flush = false
 const CARD_CHANCE=2
+var player_ref
 
+func _ready() -> void:
+	player_ref = $"../Player"
+	
 const Straight_flush = [ ["Ace_Club", "King_Club", "Queen_Club", "Jack_Club", "Ten_Club"], ["King_Club", "Queen_Club", "Jack_Club", "Ten_Club", "Nine_Club"],
 [ "Queen_Club", "Jack_Club", "Ten_Club", "Nine_Club", "Eight_Club"], ["Jack_Club", "Ten_Club", "Nine_Club", "Eight_Club", "Seven_Club"], ["Ten_Club", "Nine_Club", "Eight_Club", "Seven_Club", "Six_Club"], 
 ["Nine_Club", "Eight_Club", "Seven_Club", "Six_Club", "Five_Club"], ["Eight_Club", "Seven_Club", "Six_Club", "Five_Club", "Four_Club"], ["Seven_Club", "Six_Club", "Five_Club", "Four_Club", "Three_Club"], 
@@ -164,5 +168,30 @@ func out_chance(hand_rank:int, stage:String):
 	print("Outs: ", outs)
 	return outs
 	
-func suggest_move():
-	pass
+func suggest_move(hand_rank:int, out_chance:int, stage: String):
+	var move = "Call"
+	if stage == "flop" || stage=="pre":
+		if player_ref.raise_check_user == true && hand_rank<1:
+			move="Fold"
+		elif player_ref.raise_check_user == false:
+			if hand_rank>2:
+				move= "Raise"
+			elif hand_rank<2:
+				move="Call"
+	if stage == "turn":
+		if player_ref.raise_check_user == true && hand_rank<1:
+			move="Fold"
+		elif player_ref.raise_check_user == false:
+			if hand_rank>2:
+				move= "Raise"
+			elif hand_rank<2:
+				move="Call"
+	if stage == "river":
+		if player_ref.raise_check_user == true && hand_rank<1:
+			move="Fold"
+		elif player_ref.raise_check_user == false:
+			if hand_rank>2:
+				move= "Raise"
+			elif hand_rank<2:
+				move="Call"
+	return move

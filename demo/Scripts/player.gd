@@ -8,14 +8,14 @@ var timeout_timer
 var timeout_label
 var current_raise = 0
 var player_cards
-var coins
+var coins = 0
 var player_id 
 var all_cards = []
 
 var is_add_button_down = false
 var is_subtract_button_down = false
 var i = 0
-var timeout_time = 20.0
+var timeout_time = 30.0
 var increase_amount
 var raise_check_user
 var last_bet_user
@@ -27,11 +27,15 @@ func _ready() -> void:
 	opponent_ref = $"../Opponent"
 	timeout_label = $"../TimeoutLabel"
 	hand_eval_ref = $"../HandEvaluatorClient"
-		
+	
 	timeout_timer.one_shot = true
 	timeout_timer.wait_time = timeout_time
 	timeout_timer.timeout.connect(_on_timer_timeout)
 
+@rpc("authority", "call_remote", "reliable", 0)
+func set_timeout_time(time: int):
+	timeout_time = time
+	
 @rpc("authority","call_remote", "reliable", 0)
 func add_players_to_table(user_id, chair_id):
 	opponent_ref.opponent_card_draw(2, user_id, chair_id)
@@ -41,13 +45,28 @@ func add_players_to_table(user_id, chair_id):
 func set_player_id(id: int):
 	player_id=id
 	print(player_id)
+
+@rpc("authority", "call_remote", "reliable", 0)
+func get_client_name():
+	#print(ClientData.user_data["username"])
+	if ClientData.user_data.has("username"):
+		send_client_name.rpc_id(1, ClientData.user_data["username"])
+	else:
+		send_client_name.rpc_id(1, str(player_id))
+
+@rpc("any_peer", "call_remote", "reliable", 0)
+func send_client_name(client_name: String):
+	pass
 	
 @rpc("authority", "call_remote", "unreliable", 0)
 func set_increase_amount(amount):
 	increase_amount = amount
 
 @rpc("authority", "call_remote", "reliable", 0)
-func init(player_cards: Array, coin:int, inc_ammount:int):
+func init(player_cards: Array, coin:int, inc_ammount:int, is_new_game: bool):
+	if ClientData.user_data.has("chips") && is_new_game == true:
+		ClientData.user_data["chips"] = int(ClientData.user_data["chips"]) - coin
+		print(ClientData.user_data["chips"])
 	all_cards.clear()
 	print("Initializing")
 	all_cards = player_cards.duplicate()
@@ -66,7 +85,7 @@ func get_coins(player_id:int):
 func set_coins(coin:int):
 	coins=coin
 	visuals_ref.set_label("coin_label", coins)
-	
+		
 @rpc("authority", "call_remote", "reliable", 0)
 func user_turn(raise_check: bool, last_bet:int):
 	$"../ActionControl/Call".disabled = false
@@ -82,8 +101,9 @@ func user_turn(raise_check: bool, last_bet:int):
 func analytics_proc():
 	var hand_rank = hand_eval_ref.evaluate_hand(all_cards)
 	var out_chance = hand_eval_ref.out_chance(hand_rank, visuals_ref.stage)
+	var move = hand_eval_ref.suggest_move(hand_rank, out_chance, visuals_ref.stage)
 	print("Hand rank: ", hand_rank)
-	visuals_ref.set_analytics(hand_rank, out_chance)
+	visuals_ref.set_analytics(hand_rank, out_chance, move)
 	
 func _on_timer_timeout() -> void:
 	_on_fold_pressed()
@@ -117,6 +137,7 @@ func disable_user_input():
 	$"../ActionControl/Fold".disabled = true
 	$"../ActionControl/Raise".disabled = true
 	timeout_timer.stop()
+	analytics_proc()
 
 @rpc("authority", "call_remote", "reliable", 0)
 func server_end_move(user_id: int):
@@ -149,6 +170,7 @@ func folded(player_id:int):
 	pass
 	
 func _process(_delta):
+	raise_check()
 	timeout_label.text = str("%0.2f" % timeout_timer.time_left," s")
 	if is_add_button_down:
 		if i == 80:

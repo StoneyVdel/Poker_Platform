@@ -1,5 +1,4 @@
 extends Control
-
 var game = preload("res://Scene/game.tscn")
 
 func _on_join_game_pressed() -> void:

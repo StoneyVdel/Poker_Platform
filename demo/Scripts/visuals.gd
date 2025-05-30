@@ -18,11 +18,14 @@ var action_log
 var chairs
 var player_ref 
 var chair_info_player
+var label_info_player
 var OutlinePos = []
 var hand_eval_ref
 var out_chance_label
 var suggested_move_label
 var chat_edit
+var analytics
+var analytics_allowed = true
 
 func _ready() -> void:
 	coin_label = $"../CoinLabel"
@@ -37,6 +40,7 @@ func _ready() -> void:
 	out_chance_label = $"../Analytics/OutChance"
 	suggested_move_label = $"../Analytics/SuggestedMove"
 	chat_edit = $"../Chat/ChatEdit"
+	analytics = $"../Analytics"
 	
 	screen_size = get_viewport().size
 	
@@ -44,10 +48,30 @@ func animate_card_to_position(card, new_position):
 	var tween = get_tree().create_tween()
 	tween.tween_property(card, "position", new_position, 0.65)
 
-func set_analytics(hand_rank, out_chance):
+@rpc("authority", "call_remote", "reliable", 0)
+func are_analytics_allowed(allowed: bool):
+	analytics_allowed=allowed
+
+@rpc("authority", "call_remote", "reliable", 0)
+func analytics_visible(on: bool):
+	if analytics_allowed == true:
+		analytics.visible = true
+	else:
+		analytics.propagate_call("set_visible", [false])
+		analytics.visible = true
+		var label = Label.new()
+		label.add_theme_font_size_override("font_size", 18)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.text = "Analytics disabled by server!"
+		analytics.add_child(label)
+		await get_tree().create_timer(4).timeout
+		analytics.remove_child(label)
+		analytics.visible = false
+
+func set_analytics(hand_rank, out_chance, move):
 	card_rank_label.text = str("Current card rank: ", hand_eval_ref.hand_rank_to_string(hand_rank))
 	out_chance_label.text = str("Chances to out: ", out_chance, "%")
-	
+	suggested_move_label.text = str("Suggested move: ", move)
 	
 @rpc("authority", "call_remote", "reliable", 0)
 func draw_card_image(hand:Array, node:String):
@@ -115,15 +139,28 @@ func update_action_log(action: String):
 	action_log.text += str(action, "\n")
 
 @rpc("authority", "call_remote", "reliable", 0)
-func set_chair(chair_info : Dictionary):
+func set_chair(chair_info : Dictionary, label_info : Dictionary):
 	chair_info_player = chair_info
+	label_info_player = label_info
 	for id in chair_info:
 		print("ID: ", id, " User: ", chair_info[id])
-		chairs[id].get_node("Label").text = str(chair_info[id])
+		chairs[id].get_node("Label").text = str(label_info[id])
 
+@rpc("authority", "call_remote", "reliable", 0)
+func clear_table():
+	var nodes = get_tree().get_nodes_in_group("Outlines")
+	free_node(nodes)
+	var users = chair_info_player.values()
+	for user in users:
+		nodes = get_tree().get_nodes_in_group(str(user, "cards"))
+		free_node(nodes)
+	OutlinePos.clear()
+	
 @rpc("authority", "call_remote", "reliable", 0)
 func win_state(state):
 	if state == 1:
+		if ClientData.user_data.has("wins"):
+			ClientData.user_data["wins"] +=1
 		$"../CanvasLayer2/WinState".win()
 	else :
 		$"../CanvasLayer2/WinState".lose()
@@ -133,13 +170,7 @@ func win_state(state):
 	await action_timer.timeout
 	player_ref.timeout_time-=animation_time
 	$"../CanvasLayer2/WinState".renew()
-	var nodes = get_tree().get_nodes_in_group("Outlines")
-	free_node(nodes)
-	var users = chair_info_player.values()
-	for user in users:
-		nodes = get_tree().get_nodes_in_group(str(user, "cards"))
-		free_node(nodes)
-	OutlinePos.clear()
+	clear_table()
 
 func free_node(nodes):
 	for node in nodes:
@@ -152,10 +183,9 @@ func clear_chair(user):
 		node.find_child("Label").text= ""
 	nodes = get_tree().get_nodes_in_group(str(user,"cards"))
 	free_node(nodes)
-
-
+	
 func _on_send_btn_pressed() -> void:
-	var text = str(player_ref.player_id, ":", chat_edit.text)
+	var text = str(label_info_player[chair_info_player.find_key(player_ref.player_id)], ":", chat_edit.text)
 	chat_edit.text = ""
 	update_action_log(text)
 	update_action_log.rpc(text)

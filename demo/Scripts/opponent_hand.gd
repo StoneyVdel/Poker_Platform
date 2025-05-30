@@ -34,7 +34,8 @@ func opponent_card_draw(card_count, user):
 		
 @rpc("authority", "call_remote", "reliable", 0)
 func show_opponent_hand(players:Array, players_data:Dictionary):
-	for i in players:
-		if i != player_ref.player_id:
-				for j in range(players_data[i].size()):
-					visuals_ref.set_texture(players_data[i][j], get_tree().get_nodes_in_group(str(i,"cards"))[j])
+	if players_data.size() > 0:
+		for i in players:
+			if i != player_ref.player_id:
+					for j in range(players_data[i].size()):
+						visuals_ref.set_texture(players_data[i][j], get_tree().get_nodes_in_group(str(i,"cards"))[j])

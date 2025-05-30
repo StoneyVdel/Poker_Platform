@@ -1,11 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://ba3dxya8gqde4"]
+[gd_scene load_steps=7 format=3 uid="uid://crrk7msdpdsy4"]
 
-[ext_resource type="Script" uid="uid://bimdfhlkhr7xd" path="res://Scripts/pause_menu.gd" id="1_ur6gg"]
-[ext_resource type="PackedScene" uid="uid://crrk7msdpdsy4" path="res://Scene/options_menu.tscn" id="2_8dofg"]
-[ext_resource type="Shader" uid="uid://hiwpjhq7r4xr" path="res://Assets/pause_menu.gdshader" id="2_52pyj"]
+[ext_resource type="Script" uid="uid://c30oesesrof2t" path="res://Scripts/options_menu.gd" id="1_m2ri5"]
+[ext_resource type="Shader" uid="uid://hiwpjhq7r4xr" path="res://Assets/pause_menu.gdshader" id="2_ou42m"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8dofg"]
-shader = ExtResource("2_52pyj")
+shader = ExtResource("2_ou42m")
 shader_parameter/lod = 0.0
 
 [sub_resource type="Animation" id="Animation_48vd4"]
@@ -219,7 +218,7 @@ _data = {
 &"blur": SubResource("Animation_msjnk")
 }
 
-[node name="PauseMenu" type="Control"]
+[node name="OptionsMenu" type="Control"]
 process_mode = 3
 visibility_layer = 512
 layout_mode = 3
@@ -228,8 +227,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_ur6gg")
-OptionsScene = ExtResource("2_8dofg")
+script = ExtResource("1_m2ri5")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_8dofg")
@@ -241,48 +239,66 @@ mouse_filter = 2
 [node name="PanelContainer" type="PanelContainer" parent="."]
 modulate = Color(1, 1, 1, 0)
 visibility_layer = 512
-custom_minimum_size = Vector2(120, 90)
-layout_mode = 0
-offset_left = 820.0
-offset_top = 255.0
-offset_right = 1100.0
-offset_bottom = 815.0
+custom_minimum_size = Vector2(400, 400)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -280.0
+offset_right = 200.0
+offset_bottom = 280.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
 visibility_layer = 512
+custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 
-[node name="Resume" type="Button" parent="PanelContainer/VBoxContainer"]
-visibility_layer = 512
+[node name="HBoxContainer3" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.7
-text = "Resume"
 
-[node name="Options" type="Button" parent="PanelContainer/VBoxContainer"]
+[node name="Button" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.7
-text = "Options"
+theme_override_font_sizes/font_size = 20
+text = "X"
 
-[node name="Menu" type="Button" parent="PanelContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.7
-text = "Menu"
 
-[node name="Quit" type="Button" parent="PanelContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.7
-text = "Quit"
+theme_override_font_sizes/font_size = 30
+text = "Analytics tools"
+
+[node name="Analytics" type="CheckButton" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Fullscreen"
+
+[node name="Fullscreen" type="CheckButton" parent="PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 &"": SubResource("AnimationLibrary_nkw6i")
 }
 
-[connection signal="pressed" from="PanelContainer/VBoxContainer/Resume" to="." method="_on_resume_pressed"]
-[connection signal="pressed" from="PanelContainer/VBoxContainer/Options" to="." method="_on_options_pressed"]
-[connection signal="pressed" from="PanelContainer/VBoxContainer/Menu" to="." method="_on_menu_pressed"]
-[connection signal="pressed" from="PanelContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer3/Button" to="." method="_on_button_pressed"]
+[connection signal="toggled" from="PanelContainer/VBoxContainer/HBoxContainer/Analytics" to="." method="_on_analytics_toggled"]
+[connection signal="toggled" from="PanelContainer/VBoxContainer/HBoxContainer2/Fullscreen" to="." method="_on_fullscreen_toggled"]

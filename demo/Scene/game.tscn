@@ -342,13 +342,14 @@ grow_horizontal = 2
 theme_override_font_sizes/normal_font_size = 16
 scroll_following = true
 
-[node name="ChatEdit" type="TextEdit" parent="Chat"]
+[node name="ChatEdit" type="LineEdit" parent="Chat"]
 layout_mode = 0
 offset_top = 200.0
 offset_right = 350.0
 offset_bottom = 280.0
 theme_override_font_sizes/font_size = 28
 text = "Hello"
+clear_button_enabled = true
 
 [node name="SendBtn" type="Button" parent="Chat"]
 custom_minimum_size = Vector2(100, 80)

@@ -158,7 +158,7 @@ func clear_table():
 	
 @rpc("authority", "call_remote", "reliable", 0)
 func win_state(state):
-	if state == 1:
+	if state == true:
 		if ClientData.user_data.has("wins"):
 			ClientData.user_data["wins"] +=1
 		$"../CanvasLayer2/WinState".win()
@@ -170,7 +170,7 @@ func win_state(state):
 	await action_timer.timeout
 	player_ref.timeout_time-=animation_time
 	$"../CanvasLayer2/WinState".renew()
-	clear_table()
+	#clear_table()
 
 func free_node(nodes):
 	for node in nodes:

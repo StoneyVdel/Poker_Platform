@@ -63,14 +63,13 @@ func set_increase_amount(amount):
 	increase_amount = amount
 
 @rpc("authority", "call_remote", "reliable", 0)
-func init(player_cards: Array, coin:int, inc_ammount:int, is_new_game: bool):
-	if ClientData.user_data.has("chips") && is_new_game == true:
+func init(player_cards: Array, coin:int, inc_ammount:int):
+	if ClientData.user_data.has("chips"):
 		ClientData.user_data["chips"] = int(ClientData.user_data["chips"]) - coin
 		print(ClientData.user_data["chips"])
 	all_cards.clear()
 	print("Initializing")
 	all_cards = player_cards.duplicate()
-	#Getting card images for the player cards
 	visuals_ref.draw_card_image(player_cards, "Player") 
 	visuals_ref.raise_label.text = str(current_raise)
 	coins = coin

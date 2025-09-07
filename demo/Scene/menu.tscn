@@ -1,10 +1,70 @@
-[gd_scene load_steps=6 format=3 uid="uid://dqytp1r3jsvxo"]
+[gd_scene load_steps=20 format=3 uid="uid://dqytp1r3jsvxo"]
 
 [ext_resource type="Script" uid="uid://y4jujcywt87o" path="res://Scripts/menu.gd" id="1_b23qx"]
 [ext_resource type="PackedScene" uid="uid://di2qgj4npdhxy" path="res://Scene/login_window.tscn" id="2_u2k45"]
 [ext_resource type="PackedScene" uid="uid://ro853h8fu13i" path="res://Scene/CreateAccountWindow.tscn" id="3_u2k45"]
 [ext_resource type="PackedScene" uid="uid://crrk7msdpdsy4" path="res://Scene/options_menu.tscn" id="4_alu6o"]
-[ext_resource type="Script" uid="uid://dy6ovry1mwnoi" path="res://Scene/Leaderboard.gd" id="5_ffxp3"]
+[ext_resource type="Shader" uid="uid://bg2yd7wdtuprg" path="res://Resources/distortion.gdshader" id="5_ddci3"]
+[ext_resource type="Script" uid="uid://dy6ovry1mwnoi" path="res://Scripts/Leaderboard.gd" id="5_ffxp3"]
+[ext_resource type="Shader" uid="uid://bp33nxftjng0k" path="res://Assets/fire.gdshader" id="5_fyf5i"]
+[ext_resource type="Texture2D" uid="uid://dyry83ssgis5g" path="res://Assets/Background.jpg" id="6_k52wo"]
+[ext_resource type="Theme" uid="uid://b7lwo5k687ff3" path="res://Resources/Default.tres" id="7_k52wo"]
+
+[sub_resource type="Gradient" id="Gradient_ddci3"]
+offsets = PackedFloat32Array(0, 0.204348, 0.556522, 1)
+colors = PackedColorArray(0.194138, 0.260617, 0.0810531, 1, 0.293724, 0.464763, 0.144085, 1, 0.80093, 0.129359, 0.141359, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ddci3"]
+resource_local_to_scene = true
+gradient = SubResource("Gradient_ddci3")
+width = 1920
+height = 1080
+repeat = 1
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ddci3"]
+resource_local_to_scene = true
+noise_type = 4
+frequency = 0.0506
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_iaqyx"]
+resource_local_to_scene = true
+width = 1920
+height = 1080
+seamless = true
+noise = SubResource("FastNoiseLite_ddci3")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_j5dui"]
+resource_local_to_scene = true
+noise_type = 3
+frequency = 0.0013
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_j5dui"]
+resource_local_to_scene = true
+width = 1920
+height = 1080
+seamless = true
+noise = SubResource("FastNoiseLite_j5dui")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2bpjd"]
+resource_local_to_scene = true
+shader = ExtResource("5_fyf5i")
+shader_parameter/colorTexture = SubResource("GradientTexture2D_ddci3")
+shader_parameter/noise = SubResource("NoiseTexture2D_iaqyx")
+shader_parameter/noise2 = SubResource("NoiseTexture2D_j5dui")
+shader_parameter/scroll = Vector2(0.01, 0.01)
+shader_parameter/scroll2 = Vector2(0.05, 0.05)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_iaqyx"]
+noise_type = 3
+frequency = 0.0198
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_lgfj1"]
+seamless = true
+noise = SubResource("FastNoiseLite_iaqyx")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iaqyx"]
+shader = ExtResource("5_ddci3")
+shader_parameter/noise = SubResource("NoiseTexture2D_lgfj1")
 
 [node name="Menu" type="Control"]
 layout_mode = 3
@@ -17,6 +77,20 @@ script = ExtResource("1_b23qx")
 LoginWindow = ExtResource("2_u2k45")
 CreateAccountWindow = ExtResource("3_u2k45")
 OptionsScene = ExtResource("4_alu6o")
+
+[node name="MenuBackground" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_2bpjd")
+position = Vector2(964, 536)
+texture = ExtResource("6_k52wo")
+
+[node name="Distortion" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_iaqyx")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -38,16 +112,19 @@ layout_mode = 2
 [node name="Play" type="Button" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("7_k52wo")
 text = "Play"
 
 [node name="Options" type="Button" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("7_k52wo")
 text = "Options"
 
 [node name="Quit" type="Button" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("7_k52wo")
 text = "Quit"
 
 [node name="MarginContainer2" type="MarginContainer" parent="."]
@@ -69,12 +146,14 @@ layout_mode = 2
 [node name="User" type="Button" parent="MarginContainer2/VBoxContainer"]
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
+theme = ExtResource("7_k52wo")
 theme_override_font_sizes/font_size = 30
 text = "Login"
 
 [node name="Coins" type="Label" parent="MarginContainer2/VBoxContainer"]
 custom_minimum_size = Vector2(0, 70)
 layout_mode = 2
+theme = ExtResource("7_k52wo")
 theme_override_font_sizes/font_size = 40
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -89,6 +168,7 @@ offset_top = -20.0
 offset_right = 40.0
 offset_bottom = 20.0
 grow_vertical = 2
+theme = ExtResource("7_k52wo")
 script = ExtResource("5_ffxp3")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
@@ -117,6 +197,7 @@ vertical_alignment = 1
 [node name="ByWins" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(133, 0)
 layout_mode = 2
+theme = ExtResource("7_k52wo")
 theme_override_font_sizes/font_size = 25
 text = "Wins "
 flat = true
@@ -124,6 +205,7 @@ flat = true
 [node name="ByChips" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(127, 0)
 layout_mode = 2
+theme = ExtResource("7_k52wo")
 theme_override_font_sizes/font_size = 25
 text = "Chips "
 flat = true

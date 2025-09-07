@@ -10,10 +10,12 @@ func _ready():
 func resume():
 	$AnimationPlayer.play_backwards("blur")
 	$ColorRect.mouse_filter = 2
+	$".".visible=false
 	
 func pause():
 	$AnimationPlayer.play("blur")
 	$ColorRect.mouse_filter = 0
+	$".".visible=true
 	
 func testEsc():
 	if Input.is_action_just_pressed("esc") and pause_menu==false: #and !get_tree().paused:

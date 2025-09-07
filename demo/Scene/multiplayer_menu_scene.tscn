@@ -1,6 +1,66 @@
-[gd_scene load_steps=2 format=3 uid="uid://caq20jdhjugy3"]
+[gd_scene load_steps=16 format=3 uid="uid://caq20jdhjugy3"]
 
 [ext_resource type="Script" uid="uid://d3ya5ws8v0s5k" path="res://Scripts/multiplayer_scene.gd" id="1_ua4i3"]
+[ext_resource type="Shader" uid="uid://bp33nxftjng0k" path="res://Assets/fire.gdshader" id="2_k458t"]
+[ext_resource type="Texture2D" uid="uid://dyry83ssgis5g" path="res://Assets/Background.jpg" id="3_6xp7j"]
+[ext_resource type="Shader" uid="uid://bg2yd7wdtuprg" path="res://Resources/distortion.gdshader" id="4_xrojt"]
+[ext_resource type="Theme" uid="uid://b7lwo5k687ff3" path="res://Resources/Default.tres" id="5_douck"]
+
+[sub_resource type="Gradient" id="Gradient_x4xoe"]
+offsets = PackedFloat32Array(0, 0.204348, 0.556522, 1)
+colors = PackedColorArray(0.194138, 0.260617, 0.0810531, 1, 0.293724, 0.464763, 0.144085, 1, 0.80093, 0.129359, 0.141359, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_k52wo"]
+resource_local_to_scene = true
+gradient = SubResource("Gradient_x4xoe")
+width = 1920
+height = 1080
+repeat = 1
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_stkb8"]
+resource_local_to_scene = true
+noise_type = 4
+frequency = 0.0506
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_iaqyx"]
+resource_local_to_scene = true
+width = 1920
+height = 1080
+seamless = true
+noise = SubResource("FastNoiseLite_stkb8")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_8ri8q"]
+resource_local_to_scene = true
+noise_type = 3
+frequency = 0.0013
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_lgfj1"]
+resource_local_to_scene = true
+width = 1920
+height = 1080
+seamless = true
+noise = SubResource("FastNoiseLite_8ri8q")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gvdsi"]
+resource_local_to_scene = true
+shader = ExtResource("2_k458t")
+shader_parameter/colorTexture = SubResource("GradientTexture2D_k52wo")
+shader_parameter/noise = SubResource("NoiseTexture2D_iaqyx")
+shader_parameter/noise2 = SubResource("NoiseTexture2D_lgfj1")
+shader_parameter/scroll = Vector2(0.01, 0.01)
+shader_parameter/scroll2 = Vector2(0.05, 0.05)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_t1dxw"]
+noise_type = 3
+frequency = 0.0198
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_j5dui"]
+seamless = true
+noise = SubResource("FastNoiseLite_t1dxw")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1d46f"]
+shader = ExtResource("4_xrojt")
+shader_parameter/noise = SubResource("NoiseTexture2D_j5dui")
 
 [node name="Multiplayer_Menu_Scene" type="Control"]
 layout_mode = 3
@@ -10,6 +70,20 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ua4i3")
+
+[node name="MenuBackground" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_gvdsi")
+position = Vector2(964, 536)
+texture = ExtResource("3_6xp7j")
+
+[node name="Distortion" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_1d46f")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -39,11 +113,13 @@ placeholder_text = "Port"
 
 [node name="JoinGame" type="Button" parent="VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("5_douck")
 theme_override_font_sizes/font_size = 40
 text = "Join"
 
 [node name="HostGame" type="Button" parent="VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("5_douck")
 theme_override_font_sizes/font_size = 30
 text = "Host Game"
 

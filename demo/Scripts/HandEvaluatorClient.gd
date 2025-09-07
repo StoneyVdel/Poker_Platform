@@ -52,6 +52,14 @@ enum HandRank {
 	ROYAL_FLUSH
 }
 
+enum GameStages {
+	pre, 
+	flop, 
+	turn, 
+	river, 
+	showdown
+}
+
 func parse_card(card_str: String) -> Dictionary:
 	var parts = card_str.split("_")
 	var rank = RANK_MAP.get(parts[0], "")
@@ -141,22 +149,22 @@ func hand_rank_to_string(rank: int) -> String:
 		_:
 			return "High Card"
 
-func out_chance(hand_rank:int, stage:String):
+func out_chance(hand_rank:int, stage:int):
 	var outs=0
 	print("stage: ", stage)
 	print("Card chance", CARD_CHANCE)
-	if stage=="flop" || stage=="turn":
-		if hand_rank==0 && stage=="flop":
+	if stage==GameStages.flop || stage==GameStages.turn:
+		if hand_rank==0 && stage==GameStages.flop:
 			outs+=(CARD_CHANCE)*(5*3)
-		elif hand_rank==0 && stage=="turn":
+		elif hand_rank==0 && stage==GameStages.turn:
 			outs+=(CARD_CHANCE)*(6*3)
-		if hand_rank==1 && stage=="flop":
+		if hand_rank==1 && stage==GameStages.flop:
 			outs+=((CARD_CHANCE)*2 + (CARD_CHANCE)*(3*3))
-		elif hand_rank==1 && stage=="turn":
+		elif hand_rank==1 && stage==GameStages.turn:
 			outs+=((CARD_CHANCE)*2 + (CARD_CHANCE)*(4*3))
-		if hand_rank==2 && stage=="flop":
+		if hand_rank==2 && stage==GameStages.flop:
 			outs+=((CARD_CHANCE)*(2*2) + (CARD_CHANCE)*3)
-		elif hand_rank==2 && stage=="turn":
+		elif hand_rank==2 && stage==GameStages.turn:
 			outs+=((CARD_CHANCE)*(2*2) + (CARD_CHANCE)*(2*3))
 		if hand_rank==3:
 			outs+=(CARD_CHANCE)
@@ -168,9 +176,9 @@ func out_chance(hand_rank:int, stage:String):
 	print("Outs: ", outs)
 	return outs
 	
-func suggest_move(hand_rank:int, out_chance:int, stage: String):
+func suggest_move(hand_rank:int, out_chance:int, stage: int):
 	var move = "Call"
-	if stage == "flop" || stage=="pre":
+	if stage == GameStages.flop || stage==GameStages.pre:
 		if player_ref.raise_check_user == true && hand_rank<1:
 			move="Fold"
 		elif player_ref.raise_check_user == false:
@@ -178,7 +186,7 @@ func suggest_move(hand_rank:int, out_chance:int, stage: String):
 				move= "Raise"
 			elif hand_rank<2:
 				move="Call"
-	if stage == "turn":
+	if stage == GameStages.turn:
 		if player_ref.raise_check_user == true && hand_rank<1:
 			move="Fold"
 		elif player_ref.raise_check_user == false:
@@ -186,7 +194,7 @@ func suggest_move(hand_rank:int, out_chance:int, stage: String):
 				move= "Raise"
 			elif hand_rank<2:
 				move="Call"
-	if stage == "river":
+	if stage == GameStages.river:
 		if player_ref.raise_check_user == true && hand_rank<1:
 			move="Fold"
 		elif player_ref.raise_check_user == false:

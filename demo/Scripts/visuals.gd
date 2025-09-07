@@ -3,8 +3,15 @@ extends Node
 const CARD_SCENE = "res://Scene/card.tscn"
 const CARD_WIDTH = 124*1
 const animation_time = 5
+enum GameStage {
+	pre,
+	flop,
+	turn,
+	river,
+	showdown
+}
 
-var stage = "pre"
+var stage = GameStage.pre
 var coin_label
 var raise_label
 var total_bets_label
@@ -88,6 +95,7 @@ func draw_card_image(hand:Array, node:String):
 		elif node == "Outlines":
 			$"../Outlines".add_child(new_card)
 			new_card.add_to_group("Outlines")
+			new_card.process_mode = 4
 			animate_card_to_position(new_card, OutlinePos[i])
 
 func set_texture(card, object):
@@ -100,24 +108,26 @@ func add_card_to_hand(card, index, chair_id):
 		update_hand_positions(card, index, chair_id)
 
 @rpc("authority", "call_remote", "reliable", 0)
-func cards_to_outline(game_stage: String):
+func cards_to_outline(game_stage: int):
 	stage=game_stage
-	if game_stage == "flop":
+	if game_stage == GameStage.flop:
 		OutlinePos.append($"../Outlines/Outline5".position)
 		OutlinePos.append($"../Outlines/Outline4".position)
 		OutlinePos.append($"../Outlines/Outline3".position)
 		hand_eval_ref
 			
-	elif game_stage == "turn":
+	elif game_stage == GameStage.turn:
 		OutlinePos.insert(0, $"../Outlines/Outline2".position)
 		
-	elif game_stage == "river":
+	elif game_stage == GameStage.river:
 		OutlinePos.insert(0, $"../Outlines/Outline1".position)
 	pass
 	
 func update_hand_positions(card, index, chair_id):
 	var new_position = Vector2(clamp(calculate_card_position(index, chair_id), 0, screen_size.x) , 
 		clamp(chairs[chair_id].position.y - 100, 0, screen_size.y ))
+	if chair_id == chair_info_player.find_key(player_ref.player_id):
+		card.pos = {"last_position" : var_to_str(new_position)}
 	animate_card_to_position(card, new_position)
 	
 func calculate_card_position(index, chair_id):
@@ -154,7 +164,6 @@ func clear_table():
 	for user in users:
 		nodes = get_tree().get_nodes_in_group(str(user, "cards"))
 		free_node(nodes)
-	OutlinePos.clear()
 	
 @rpc("authority", "call_remote", "reliable", 0)
 func win_state(state):

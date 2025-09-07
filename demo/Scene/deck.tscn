@@ -18,3 +18,4 @@ region_rect = Rect2(0, 0, 124.368, 104.68)
 
 [node name="DeckCollision" type="CollisionShape2D" parent="DeckArea"]
 shape = SubResource("RectangleShape2D_jvfs1")
+disabled = true

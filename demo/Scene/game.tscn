@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://deqkcwgx7qlcf"]
+[gd_scene load_steps=13 format=3 uid="uid://deqkcwgx7qlcf"]
 
 [ext_resource type="Script" uid="uid://c2u47qj0jtxql" path="res://Scripts/game.gd" id="1_8f6ah"]
 [ext_resource type="Texture2D" uid="uid://b40cyrxemxjg1" path="res://Assets/Table.jpg" id="2_c6b8m"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://bngm68apw512i" path="res://Scripts/player.gd" id="5_yjs1f"]
 [ext_resource type="Script" uid="uid://b3xgxouvoulyw" path="res://Scripts/opponent_hand.gd" id="6_vyw1f"]
 [ext_resource type="Script" uid="uid://bal5ymdumy8d3" path="res://Scripts/HandEvaluatorClient.gd" id="10_twwsd"]
+[ext_resource type="Script" uid="uid://crsl38pyb73j5" path="res://Scripts/card_manager.gd" id="11_0ka5k"]
 [ext_resource type="PackedScene" uid="uid://ba3dxya8gqde4" path="res://Scene/pause_menu.tscn" id="11_c6b8m"]
 [ext_resource type="PackedScene" uid="uid://crgqrkbx5v0nt" path="res://Scene/win_state.tscn" id="12_0ka5k"]
 
@@ -365,7 +366,11 @@ text = "Send"
 layer = 2
 
 [node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("11_c6b8m")]
+visible = false
 mouse_filter = 2
+
+[node name="CardManager" type="Node2D" parent="."]
+script = ExtResource("11_0ka5k")
 
 [connection signal="pressed" from="ActionControl/Call" to="Player" method="_on_call_pressed"]
 [connection signal="pressed" from="ActionControl/Fold" to="Player" method="_on_fold_pressed"]

@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://deqkcwgx7qlcf"]
+[gd_scene load_steps=14 format=3 uid="uid://deqkcwgx7qlcf"]
 
 [ext_resource type="Script" uid="uid://c2u47qj0jtxql" path="res://Scripts/game.gd" id="1_8f6ah"]
 [ext_resource type="Texture2D" uid="uid://b40cyrxemxjg1" path="res://Assets/Table.jpg" id="2_c6b8m"]
 [ext_resource type="PackedScene" uid="uid://ut61nrnralnv" path="res://Scene/outline.tscn" id="3_0ka5k"]
+[ext_resource type="FontFile" uid="uid://c4f7xuu8xllfc" path="res://Assets/White Apple.otf" id="4_0ka5k"]
 [ext_resource type="PackedScene" uid="uid://cdc2q67c85bbb" path="res://Scene/deck.tscn" id="4_ha7wd"]
 [ext_resource type="Script" uid="uid://cqutqs1oxod6c" path="res://Scripts/visuals.gd" id="4_yjs1f"]
 [ext_resource type="Script" uid="uid://bngm68apw512i" path="res://Scripts/player.gd" id="5_yjs1f"]
@@ -162,9 +163,11 @@ offset_left = 11.0
 offset_top = 9.0
 offset_right = 251.0
 offset_bottom = 129.0
+theme_override_fonts/font = ExtResource("4_0ka5k")
 theme_override_font_sizes/font_size = 80
 disabled = true
 text = "Call"
+metadata/_edit_use_anchors_ = true
 
 [node name="Fold" type="Button" parent="ActionControl"]
 layout_mode = 0
@@ -172,6 +175,7 @@ offset_left = 11.0
 offset_top = 165.0
 offset_right = 251.0
 offset_bottom = 285.0
+theme_override_fonts/font = ExtResource("4_0ka5k")
 theme_override_font_sizes/font_size = 80
 disabled = true
 text = "Fold
@@ -183,6 +187,7 @@ offset_left = 314.0
 offset_top = 9.0
 offset_right = 554.0
 offset_bottom = 129.0
+theme_override_fonts/font = ExtResource("4_0ka5k")
 theme_override_font_sizes/font_size = 80
 disabled = true
 text = "Raise"
@@ -202,6 +207,7 @@ offset_left = 460.0
 offset_top = 20.0
 offset_right = 580.0
 offset_bottom = 116.0
+theme_override_fonts/font = ExtResource("4_0ka5k")
 theme_override_font_sizes/font_size = 50
 action_mode = 0
 text = "Add"
@@ -212,6 +218,7 @@ offset_left = 260.0
 offset_top = 20.0
 offset_right = 440.0
 offset_bottom = 130.0
+theme_override_fonts/font = ExtResource("4_0ka5k")
 theme_override_font_sizes/font_size = 80
 text = "0"
 
@@ -220,6 +227,7 @@ layout_mode = 0
 offset_top = 20.0
 offset_right = 222.0
 offset_bottom = 116.0
+theme_override_fonts/font = ExtResource("4_0ka5k")
 theme_override_font_sizes/font_size = 50
 text = "Subtract
 "
@@ -232,6 +240,7 @@ offset_top = 500.0
 offset_right = 320.0
 offset_bottom = 610.0
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_0ka5k")
 theme_override_font_sizes/font_size = 40
 
 [node name="CoinLabel" type="Label" parent="."]
@@ -239,6 +248,7 @@ offset_left = 1518.0
 offset_top = 691.0
 offset_right = 1718.0
 offset_bottom = 771.0
+theme_override_fonts/font = ExtResource("4_0ka5k")
 theme_override_font_sizes/font_size = 80
 text = "0"
 
@@ -340,6 +350,7 @@ anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 200.0
 grow_horizontal = 2
+theme_override_fonts/normal_font = ExtResource("4_0ka5k")
 theme_override_font_sizes/normal_font_size = 16
 scroll_following = true
 

@@ -31,8 +31,6 @@ func _ready() -> void:
 	Database.get_leaderboard.rpc_id(1, "wins")
 	await get_tree().create_timer(1).timeout
 	set_leaderboard()
-	login_window = LoginWindow.instantiate()
-	update_window = CreateAccountWindow.instantiate()
 
 func set_leaderboard():
 	var leaderboard_ui = $Panel
@@ -60,10 +58,12 @@ func _on_quit_pressed() -> void:
 func set_account_btn():
 	$MarginContainer2/VBoxContainer/User.text = ClientData.user_data["username"]
 	
-func _on_user_pressed() -> void:
+func _on_login_pressed() -> void:
 	if ClientData.login_success == false:
+		login_window = LoginWindow.instantiate()
 		add_child(login_window)
 	else:
+		update_window = CreateAccountWindow.instantiate()
 		add_child(update_window)
 
 

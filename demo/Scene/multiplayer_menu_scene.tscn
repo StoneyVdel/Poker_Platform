@@ -1,10 +1,10 @@
 [gd_scene load_steps=16 format=3 uid="uid://caq20jdhjugy3"]
 
 [ext_resource type="Script" uid="uid://d3ya5ws8v0s5k" path="res://Scripts/multiplayer_scene.gd" id="1_ua4i3"]
-[ext_resource type="Shader" uid="uid://bp33nxftjng0k" path="res://Assets/fire.gdshader" id="2_k458t"]
+[ext_resource type="Shader" uid="uid://bp33nxftjng0k" path="res://Resources/Shaders/fire.gdshader" id="2_k458t"]
 [ext_resource type="Texture2D" uid="uid://dyry83ssgis5g" path="res://Assets/Background.jpg" id="3_6xp7j"]
-[ext_resource type="Shader" uid="uid://bg2yd7wdtuprg" path="res://Resources/distortion.gdshader" id="4_xrojt"]
-[ext_resource type="Theme" uid="uid://b7lwo5k687ff3" path="res://Resources/Default.tres" id="5_douck"]
+[ext_resource type="Shader" uid="uid://bg2yd7wdtuprg" path="res://Resources/Shaders/distortion.gdshader" id="4_xrojt"]
+[ext_resource type="Theme" uid="uid://b7lwo5k687ff3" path="res://Resources/Themes/Default.tres" id="5_douck"]
 
 [sub_resource type="Gradient" id="Gradient_x4xoe"]
 offsets = PackedFloat32Array(0, 0.204348, 0.556522, 1)

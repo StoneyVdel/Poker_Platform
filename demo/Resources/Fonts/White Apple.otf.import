@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://c4f7xuu8xllfc"
-path="res://.godot/imported/White Apple.otf-d1285b61da28aa831bc9d39a5197c8df.fontdata"
+path="res://.godot/imported/White Apple.otf-7593af4a5a0202b12d75b9fb4cf60a36.fontdata"
 
 [deps]
 
-source_file="res://Assets/White Apple.otf"
-dest_files=["res://.godot/imported/White Apple.otf-d1285b61da28aa831bc9d39a5197c8df.fontdata"]
+source_file="res://Resources/Fonts/White Apple.otf"
+dest_files=["res://.godot/imported/White Apple.otf-7593af4a5a0202b12d75b9fb4cf60a36.fontdata"]
 
 [params]
 

@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://c2u47qj0jtxql" path="res://Scripts/game.gd" id="1_8f6ah"]
 [ext_resource type="Texture2D" uid="uid://b40cyrxemxjg1" path="res://Assets/Table.jpg" id="2_c6b8m"]
 [ext_resource type="PackedScene" uid="uid://ut61nrnralnv" path="res://Scene/outline.tscn" id="3_0ka5k"]
-[ext_resource type="FontFile" uid="uid://c4f7xuu8xllfc" path="res://Assets/White Apple.otf" id="4_0ka5k"]
+[ext_resource type="FontFile" uid="uid://c4f7xuu8xllfc" path="res://Resources/Fonts/White Apple.otf" id="4_0ka5k"]
 [ext_resource type="PackedScene" uid="uid://cdc2q67c85bbb" path="res://Scene/deck.tscn" id="4_ha7wd"]
 [ext_resource type="Script" uid="uid://cqutqs1oxod6c" path="res://Scripts/visuals.gd" id="4_yjs1f"]
 [ext_resource type="Script" uid="uid://bngm68apw512i" path="res://Scripts/player.gd" id="5_yjs1f"]

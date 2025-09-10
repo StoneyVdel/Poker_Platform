@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://bimdfhlkhr7xd" path="res://Scripts/pause_menu.gd" id="1_ur6gg"]
 [ext_resource type="PackedScene" uid="uid://crrk7msdpdsy4" path="res://Scene/options_menu.tscn" id="2_8dofg"]
-[ext_resource type="Shader" uid="uid://hiwpjhq7r4xr" path="res://Assets/pause_menu.gdshader" id="2_52pyj"]
-[ext_resource type="Theme" uid="uid://b7lwo5k687ff3" path="res://Resources/Default.tres" id="4_8dofg"]
+[ext_resource type="Shader" uid="uid://hiwpjhq7r4xr" path="res://Resources/Shaders/pause_menu.gdshader" id="2_52pyj"]
+[ext_resource type="Theme" uid="uid://b7lwo5k687ff3" path="res://Resources/Themes/Default.tres" id="4_8dofg"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8dofg"]
 resource_local_to_scene = true

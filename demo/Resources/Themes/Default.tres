@@ -1,6 +1,6 @@
 [gd_resource type="Theme" load_steps=14 format=3 uid="uid://b7lwo5k687ff3"]
 
-[ext_resource type="FontFile" uid="uid://c4f7xuu8xllfc" path="res://Assets/White Apple.otf" id="1_6xuei"]
+[ext_resource type="FontFile" uid="uid://c4f7xuu8xllfc" path="res://Resources/Fonts/White Apple.otf" id="1_6xuei"]
 [ext_resource type="Texture2D" uid="uid://d5t13h2kfjsx" path="res://Assets/Windows_Button_Focus.png" id="1_ejgke"]
 [ext_resource type="Texture2D" uid="uid://ci0d3y2m8p4e8" path="res://Assets/Windows_Button.png" id="2_6xuei"]
 [ext_resource type="Texture2D" uid="uid://bl8yur1262vk5" path="res://Assets/Window_Base.png" id="4_bm7mk"]

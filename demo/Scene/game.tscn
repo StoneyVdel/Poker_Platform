@@ -125,22 +125,22 @@ texture = ExtResource("2_c6b8m")
 [node name="Outlines" type="Node2D" parent="."]
 position = Vector2(650, 520)
 
-[node name="Outline1" parent="Outlines" instance=ExtResource("3_0ka5k")]
+[node name="Outline1" parent="Outlines" groups=["Outlines_pos"] instance=ExtResource("3_0ka5k")]
 scale = Vector2(0.7, 0.7)
 
-[node name="Outline2" parent="Outlines" instance=ExtResource("3_0ka5k")]
+[node name="Outline2" parent="Outlines" groups=["Outlines_pos"] instance=ExtResource("3_0ka5k")]
 position = Vector2(145, 0)
 scale = Vector2(0.7, 0.7)
 
-[node name="Outline3" parent="Outlines" instance=ExtResource("3_0ka5k")]
+[node name="Outline3" parent="Outlines" groups=["Outlines_pos"] instance=ExtResource("3_0ka5k")]
 position = Vector2(290, 0)
 scale = Vector2(0.7, 0.7)
 
-[node name="Outline4" parent="Outlines" instance=ExtResource("3_0ka5k")]
+[node name="Outline4" parent="Outlines" groups=["Outlines_pos"] instance=ExtResource("3_0ka5k")]
 position = Vector2(435, 0)
 scale = Vector2(0.7, 0.7)
 
-[node name="Outline5" parent="Outlines" instance=ExtResource("3_0ka5k")]
+[node name="Outline5" parent="Outlines" groups=["Outlines_pos"] instance=ExtResource("3_0ka5k")]
 position = Vector2(580, 0)
 scale = Vector2(0.7, 0.7)
 

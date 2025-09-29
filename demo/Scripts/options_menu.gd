@@ -5,7 +5,7 @@ var analytics
 func _ready() -> void:
 	$AnimationPlayer.play("RESET")
 	$AnimationPlayer.play("blur")
-	$PanelContainer/VBoxContainer/HBoxContainer/Analytics.button_pressed = get_parent().get_parent().get_parent().visuals_ref.analytics.visible
+	#$PanelContainer/VBoxContainer/HBoxContainer/Analytics.button_pressed = get_parent().get_parent().get_parent().visuals_ref.analytics.visible
 	
 func _on_button_pressed() -> void:
 	$AnimationPlayer.play_backwards("blur")

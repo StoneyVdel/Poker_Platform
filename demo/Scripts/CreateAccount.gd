@@ -40,7 +40,7 @@ func _on_create_button_down():
 		return
 	
 	if ClientData.login_success == false:
-		CreateAccount.emit(username, email, phone, get_parent().hash_data(password))
+		CreateAccount.emit(username, email, phone, ClientData.hash_data(password))
 	else:
 		Database.update_account.rpc_id(1, username, email, phone, get_parent().hash_data(password))
 	$AnimationPlayer.play_backwards("blur")

@@ -1,7 +1,18 @@
-[gd_scene load_steps=4 format=3 uid="uid://fhq4hx62ixiu"]
+[gd_scene load_steps=6 format=3 uid="uid://fhq4hx62ixiu"]
 
-[ext_resource type="Texture2D" uid="uid://j2yw0psvfiw6" path="res://Assets/Clubs-88x124.png" id="1_5d6cb"]
 [ext_resource type="Script" uid="uid://bjy64qx76muc" path="res://Scripts/card.gd" id="1_vg657"]
+[ext_resource type="Shader" uid="uid://brk367iiawpv2" path="res://Resources/Shaders/2D_perspective.gdshader" id="3_gohtu"]
+[ext_resource type="Texture2D" uid="uid://qyy40r0tvjty" path="res://Assets/Ace_Club.png" id="3_xwqq4"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gohtu"]
+resource_local_to_scene = true
+shader = ExtResource("3_gohtu")
+shader_parameter/fov = 1.0
+shader_parameter/cull_back = true
+shader_parameter/y_rot = 0.0
+shader_parameter/x_rot = 0.0
+shader_parameter/inset = 0.0
+shader_parameter/rect_size = Vector2(123, 171)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_75c02"]
 size = Vector2(88, 122)
@@ -11,8 +22,9 @@ position = Vector2(1320, 509)
 script = ExtResource("1_vg657")
 
 [node name="Card_Image" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_gohtu")
 scale = Vector2(1.4, 1.381)
-texture = ExtResource("1_5d6cb")
+texture = ExtResource("3_xwqq4")
 region_enabled = true
 region_rect = Rect2(0, 0, 88, 124)
 region_filter_clip_enabled = true

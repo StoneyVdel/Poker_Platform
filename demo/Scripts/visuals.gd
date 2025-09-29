@@ -11,7 +11,7 @@ enum GameStage {
 	showdown
 }
 
-var stage = GameStage.pre
+var game_stage = GameStage.pre
 var coin_label
 var raise_label
 var total_bets_label
@@ -48,7 +48,10 @@ func _ready() -> void:
 	suggested_move_label = $"../Analytics/SuggestedMove"
 	chat_edit = $"../Chat/ChatEdit"
 	analytics = $"../Analytics"
-	
+	var outlines_group = get_tree().get_nodes_in_group("Outlines_pos")
+	for outline in outlines_group:
+		OutlinePos.append(outline.position)
+	OutlinePos.reverse()
 	screen_size = get_viewport().size
 	
 func animate_card_to_position(card, new_position):
@@ -81,7 +84,8 @@ func set_analytics(hand_rank, out_chance, move):
 	suggested_move_label.text = str("Suggested move: ", move)
 	
 @rpc("authority", "call_remote", "reliable", 0)
-func draw_card_image(hand:Array, node:String):
+func draw_card_image(hand:Array, node:String, stage: int):
+	game_stage = stage
 	if node == "Outlines":
 		for card in hand:
 				player_ref.all_cards.append(card)
@@ -96,7 +100,13 @@ func draw_card_image(hand:Array, node:String):
 			$"../Outlines".add_child(new_card)
 			new_card.add_to_group("Outlines")
 			new_card.process_mode = 4
-			animate_card_to_position(new_card, OutlinePos[i])
+			match stage:
+				GameStage.flop:
+					animate_card_to_position(new_card, OutlinePos[i])
+				GameStage.turn:
+					animate_card_to_position(new_card, OutlinePos[3])
+				GameStage.river:
+					animate_card_to_position(new_card, OutlinePos[4])
 
 func set_texture(card, object):
 	var card_image_path = str("res://Assets/"+card+".png")
@@ -106,22 +116,6 @@ func set_texture(card, object):
 func add_card_to_hand(card, index, chair_id):
 		$"../Player".add_child(card)
 		update_hand_positions(card, index, chair_id)
-
-@rpc("authority", "call_remote", "reliable", 0)
-func cards_to_outline(game_stage: int):
-	stage=game_stage
-	if game_stage == GameStage.flop:
-		OutlinePos.append($"../Outlines/Outline5".position)
-		OutlinePos.append($"../Outlines/Outline4".position)
-		OutlinePos.append($"../Outlines/Outline3".position)
-		hand_eval_ref
-			
-	elif game_stage == GameStage.turn:
-		OutlinePos.insert(0, $"../Outlines/Outline2".position)
-		
-	elif game_stage == GameStage.river:
-		OutlinePos.insert(0, $"../Outlines/Outline1".position)
-	pass
 	
 func update_hand_positions(card, index, chair_id):
 	var new_position = Vector2(clamp(calculate_card_position(index, chair_id), 0, screen_size.x) , 

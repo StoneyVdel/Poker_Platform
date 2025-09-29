@@ -63,14 +63,12 @@ func set_increase_amount(amount):
 	increase_amount = amount
 
 @rpc("authority", "call_remote", "reliable", 0)
-func init(player_cards: Array, coin:int, inc_ammount:int):
+func init(coin:int, inc_ammount:int):
 	if ClientData.user_data.has("chips"):
 		ClientData.user_data["chips"] = int(ClientData.user_data["chips"]) - coin
 		print(ClientData.user_data["chips"])
 	all_cards.clear()
 	print("Initializing")
-	all_cards = player_cards.duplicate()
-	visuals_ref.draw_card_image(player_cards, "Player") 
 	visuals_ref.raise_label.text = str(current_raise)
 	coins = coin
 	increase_amount = inc_ammount
@@ -93,14 +91,15 @@ func user_turn(raise_check: bool, last_bet:int):
 	
 	analytics_proc()
 	
+	#Change name of raise_check/raise_check_user
 	raise_check_user = raise_check
 	last_bet_user = last_bet
-	timeout_timer.start()
+	#timeout_timer.start()
 	
 func analytics_proc():
 	var hand_rank = hand_eval_ref.evaluate_hand(all_cards)
-	var out_chance = hand_eval_ref.out_chance(hand_rank, visuals_ref.stage)
-	var move = hand_eval_ref.suggest_move(hand_rank, out_chance, visuals_ref.stage)
+	var out_chance = hand_eval_ref.out_chance(hand_rank, visuals_ref.game_stage)
+	var move = hand_eval_ref.suggest_move(hand_rank, out_chance, visuals_ref.game_stage)
 	print("Hand rank: ", hand_rank)
 	visuals_ref.set_analytics(hand_rank, out_chance, move)
 	
@@ -113,10 +112,8 @@ func call_func(check_if_raise, last_bet):
 		action= "Call"
 		get_coins.rpc_id(1, player_id)
 		if last_bet > coins:
-			#Send to backend
 			user_raise.rpc_id(1, player_id, coins, "Call")
 		else :
-			#Send to backend
 			user_raise.rpc_id(1, player_id, last_bet, "Call")
 		get_coins.rpc_id(1, player_id)
 		raise_check()
@@ -124,10 +121,10 @@ func call_func(check_if_raise, last_bet):
 	end_move(player_id, action)
 
 func end_move(user_id: int, action: String):
+	timeout_timer.stop()
 	timeout_timer.wait_time = timeout_time
 	analytics_proc()
 	disable_user_input()
-	timeout_timer.stop()
 	server_end_move.rpc_id(1, user_id, action)
 
 @rpc("authority", "call_remote", "reliable", 0)
@@ -160,11 +157,11 @@ func check_raise_values(add):
 
 func raise_check():
 	if current_raise > coins:
-			while current_raise > coins:
-				current_raise-= increase_amount
-			visuals_ref.set_label("raise_label", str(current_raise))
+		while current_raise > coins:
+			current_raise-= increase_amount
+		visuals_ref.set_label("raise_label", str(current_raise))
 
-@rpc("authority", "call_remote", "reliable", 0)
+@rpc("any_peer", "call_remote", "reliable", 0)
 func folded(player_id:int):
 	pass
 	
@@ -189,14 +186,19 @@ func set_raise(raise: int):
 	current_raise = raise
 	min_value = raise
 	visuals_ref.set_label("raise_label", str(current_raise))
+
+@rpc("authority", "call_remote", "reliable", 0)
+func set_cards(cards):
+	all_cards = cards.duplicate()
+	visuals_ref.draw_card_image(cards, "Player", 0) 
 	
 func _on_call_pressed() -> void:
 	call_func(raise_check_user, last_bet_user)
 	min_value = 0
 
 func _on_fold_pressed() -> void:
-	end_move(player_id, "Folded")
 	folded.rpc_id(1, player_id)
+	end_move(player_id, "Folded")
 
 func _on_raise_pressed() -> void:
 	min_value = 0
